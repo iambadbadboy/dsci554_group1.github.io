@@ -132,7 +132,7 @@
         /* ============ MAIN LAYOUT ============ */
         .main {
             display: grid;
-            grid-template-columns: 1fr 480px;
+            grid-template-columns: 1fr 560px;
             height: calc(100vh - 64px);
         }
 
@@ -381,7 +381,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-secondary);
         }
@@ -391,7 +391,7 @@
         }
 
         .card-body {
-            padding: 20px;
+            padding: 24px;
         }
 
         /* Hero Risk Display */
@@ -479,7 +479,7 @@
         }
 
         .risk-factor-label {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             display: flex;
             align-items: center;
@@ -487,7 +487,7 @@
         }
 
         .risk-factor-value {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -576,12 +576,12 @@
 
         .tab {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             background: transparent;
             border: none;
             border-radius: var(--radius-sm);
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 500;
             font-family: inherit;
             cursor: pointer;
@@ -636,9 +636,9 @@
         }
 
         .recommendation-desc {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .priority-tag {
@@ -807,12 +807,12 @@
         .neighbor-item-info { flex: 1; }
 
         .neighbor-item-address {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 500;
         }
 
         .neighbor-item-meta {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
@@ -928,6 +928,1319 @@
             max-width: 320px;
             margin: 0 auto;
         }
+
+        /* ============ SIMULATION MODE STYLES ============ */
+        
+        /* Mode Toggle Switch */
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-elevated);
+            padding: 4px;
+            border-radius: 24px;
+            border: 1px solid var(--border-default);
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .mode-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        /* Timeline Controls */
+        .timeline-controls {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: 16px 24px;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            display: none;
+            min-width: 500px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-controls.visible {
+            display: block;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .timeline-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-scenario {
+            font-size: 0.75rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
+        .timeline-bar {
+            position: relative;
+            height: 8px;
+            background: var(--bg-base);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--risk-extreme));
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .timeline-marker.earthquake { background: var(--risk-extreme); }
+        .timeline-marker.aftershock { background: var(--risk-high); }
+        .timeline-marker.tsunami { background: #3b82f6; }
+
+        .timeline-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .timeline-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-btn:hover {
+            background: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        .timeline-btn.play {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            font-size: 1.3rem;
+        }
+
+        .speed-selector {
+            padding: 6px 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        /* Layer Control Panel */
+        .layer-panel {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            display: none;
+            min-width: 200px;
+        }
+
+        .layer-panel.visible {
+            display: block;
+        }
+
+        .layer-panel-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .layer-item:last-child {
+            border-bottom: none;
+        }
+
+        .layer-item.disabled {
+            opacity: 0.4;
+        }
+
+        .layer-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-strong);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .layer-item.active .layer-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .layer-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Alert Panel */
+        .alert-panel {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 1100;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 320px;
+        }
+
+        .alert-panel.visible {
+            display: flex;
+        }
+
+        .alert-card {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            border-left: 4px solid;
+            backdrop-filter: blur(12px);
+            animation: slideIn 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-card.critical {
+            border-color: var(--risk-extreme);
+            background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, var(--bg-elevated) 100%);
+        }
+
+        .alert-card.warning {
+            border-color: var(--risk-high);
+            background: linear-gradient(135deg, rgba(249,115,22,0.15) 0%, var(--bg-elevated) 100%);
+        }
+
+        .alert-card.advisory {
+            border-color: var(--risk-medium);
+            background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, var(--bg-elevated) 100%);
+        }
+
+        .alert-card.info {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(59,130,246,0.15) 0%, var(--bg-elevated) 100%);
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .alert-icon {
+            font-size: 1.1rem;
+        }
+
+        .alert-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .alert-body {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .alert-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .alert-dismiss {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+        }
+
+        /* Shockwave Animation */
+        .shockwave-ring {
+            stroke: var(--risk-extreme);
+            fill: none;
+            stroke-width: 3;
+            opacity: 0.8;
+        }
+
+        @keyframes expandRing {
+            0% { r: 0; opacity: 0.9; stroke-width: 4; }
+            100% { r: var(--max-radius); opacity: 0; stroke-width: 1; }
+        }
+
+        /* Epicenter Marker */
+        .epicenter-marker {
+            animation: epicenterPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes epicenterPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Simulation Sidebar */
+        .sim-sidebar-content {
+            display: none;
+        }
+
+        .sim-sidebar-content.visible {
+            display: block;
+        }
+
+        .scenario-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .scenario-card.active {
+            border-color: var(--accent-primary);
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, var(--bg-surface) 100%);
+        }
+
+        .scenario-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .scenario-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .scenario-magnitude {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--risk-extreme-bg);
+            color: var(--risk-extreme);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-left: 8px;
+        }
+
+        /* Damage Stats Panel */
+        .damage-stats {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .damage-stats-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .damage-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+        }
+
+        .damage-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .damage-stat-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .damage-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .damage-dot.intact { background: #10b981; }
+        .damage-dot.minor { background: #f59e0b; }
+        .damage-dot.moderate { background: #f97316; }
+        .damage-dot.severe { background: #ef4444; }
+        .damage-dot.collapsed { background: #1f2937; border: 2px solid #6b7280; }
+
+        /* Tsunami Wave Overlay */
+        .tsunami-overlay {
+            fill: rgba(59, 130, 246, 0.3);
+            stroke: #3b82f6;
+            stroke-width: 2;
+        }
+
+        /* Event Info Popup */
+        .event-popup {
+            min-width: 200px;
+        }
+
+        .event-popup-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-popup-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.85rem;
+        }
+
+        .event-popup-label {
+            color: #a0a0b0;
+        }
+
+        .event-popup-value {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ============ PHASE 2: EVACUATION ROUTES ============ */
+        .evacuation-route {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .route-primary {
+            stroke: #10b981;
+            stroke-width: 5;
+            fill: none;
+        }
+
+        .route-secondary {
+            stroke: #10b981;
+            stroke-width: 3;
+            stroke-dasharray: 10, 5;
+            fill: none;
+        }
+
+        .route-blocked {
+            stroke: #ef4444 !important;
+            stroke-dasharray: 5, 5;
+        }
+
+        .assembly-point-marker {
+            background: #10b981;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Tsunami Warning Banner */
+        .tsunami-banner {
+            position: absolute;
+            top: 24px;
+            left: 240px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 8px 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 800;
+            animation: tsunamiBannerPulse 2s ease-in-out infinite;
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.4);
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .tsunami-banner.visible {
+            display: flex;
+        }
+
+        @keyframes tsunamiBannerPulse {
+            0%, 100% { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+            50% { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); }
+        }
+
+        .tsunami-banner span:first-child {
+            font-size: 1.2rem;
+        }
+
+        /* ============================================
+           FIRST RESPONDER TRAINING SYSTEM
+           ============================================ */
+        
+        /* Decision Prompt Overlay */
+        .decision-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1800;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .decision-overlay.visible {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+        
+        .decision-modal {
+            background: #1a1d24;
+            border-radius: 16px;
+            max-width: 520px;
+            width: 92%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.3);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.4); }
+        }
+        
+        .decision-header {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .decision-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f87171;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .decision-timer {
+            background: rgba(239, 68, 68, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f87171;
+        }
+        
+        .decision-timer.urgent {
+            animation: timerPulse 0.5s ease-in-out infinite;
+            background: rgba(239, 68, 68, 0.4);
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .decision-body {
+            padding: 24px;
+        }
+        
+        .decision-situation {
+            background: #0f1115;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f87171;
+        }
+        
+        .decision-situation-title {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        
+        .decision-situation-text {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+        
+        .decision-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .decision-option {
+            background: #0f1115;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .decision-option:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .decision-option-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .decision-option-icon {
+            font-size: 1.5rem;
+        }
+        
+        .decision-option-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        
+        .decision-option-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        .decision-option-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .decision-option-impact {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            padding-left: 40px;
+        }
+        
+        /* Resource Panel */
+        .resource-panel {
+            background: var(--bg-base);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .resource-item {
+            background: #0f1115;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .resource-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-item-name {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .resource-item-count {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        
+        .resource-item-count.low {
+            color: #f87171;
+        }
+        
+        .resource-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .resource-bar-fill {
+            height: 100%;
+            background: #4ade80;
+            transition: width 0.3s ease;
+        }
+        
+        .resource-bar-fill.medium {
+            background: #fbbf24;
+        }
+        
+        .resource-bar-fill.low {
+            background: #f87171;
+        }
+        
+        /* Outcome Tracking */
+        .outcome-panel {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(99,102,241,0.02) 100%);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .outcome-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #818cf8;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .outcome-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .outcome-metric {
+            text-align: center;
+        }
+        
+        .outcome-metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #f8fafc;
+            line-height: 1;
+        }
+        
+        .outcome-metric-value.positive {
+            color: #4ade80;
+        }
+        
+        .outcome-metric-value.negative {
+            color: #f87171;
+        }
+        
+        .outcome-metric-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+        
+        .outcome-bar-container {
+            margin-top: 16px;
+        }
+        
+        .outcome-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+        
+        .outcome-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .outcome-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Deployed Units List */
+        .deployed-list {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .deployed-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: #0f1115;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .deployed-item-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+        }
+        
+        .deployed-item-status {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .deployed-item-status.enroute {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        .deployed-item-status.onscene {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+        
+        .deployed-item-status.returning {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+        
+        /* Unit Markers on Map */
+        .unit-marker-container {
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        @keyframes unitPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 4px 16px rgba(74, 222, 128, 0.5); }
+        }
+        
+        .deployed-unit-marker.onscene {
+            animation: unitPulse 1.5s ease-in-out infinite;
+        }
+
+        /* Post-Disaster Summary Modal */
+        .summary-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        
+        .summary-overlay.visible {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .summary-modal {
+            background: #1a1d24;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.1);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .summary-header {
+            padding: 28px 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%);
+        }
+        
+        .summary-header-content h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.01em;
+        }
+        
+        .summary-header-content p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+        
+        .summary-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 10px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .summary-close:hover {
+            background: rgba(255,255,255,0.15);
+            color: #f8fafc;
+        }
+        
+        .summary-body {
+            padding: 28px 32px;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        
+        .summary-stat {
+            background: #0f1115;
+            padding: 18px 14px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .summary-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f8fafc;
+            line-height: 1;
+        }
+        
+        .summary-stat-value.critical { color: #f87171; }
+        .summary-stat-value.warning { color: #fbbf24; }
+        .summary-stat-value.success { color: #4ade80; }
+        
+        .summary-stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .summary-section {
+            margin-bottom: 24px;
+        }
+        
+        .summary-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .summary-list li {
+            padding: 14px 18px;
+            background: #0f1115;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.5;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        
+        .summary-list li .icon {
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .summary-list li.positive { 
+            border-left: 4px solid #4ade80;
+            background: linear-gradient(90deg, rgba(74,222,128,0.08) 0%, #0f1115 30%);
+        }
+        .summary-list li.negative { 
+            border-left: 4px solid #f87171;
+            background: linear-gradient(90deg, rgba(248,113,113,0.08) 0%, #0f1115 30%);
+        }
+        .summary-list li.action { 
+            border-left: 4px solid #818cf8;
+        }
+        
+        .summary-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+        }
+        
+        .summary-action-card {
+            background: #0f1115;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .summary-action-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin: 0 0 8px 0;
+        }
+        
+        .summary-action-card p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .summary-footer {
+            padding: 20px 32px 28px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .summary-btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .summary-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #cbd5e1;
+        }
+        
+        .summary-btn.secondary:hover {
+            background: rgba(255,255,255,0.12);
+            color: #f8fafc;
+        }
+        
+        .summary-btn.primary {
+            background: #6366f1;
+            border: none;
+            color: white;
+        }
+        
+        .summary-btn.primary:hover {
+            background: #4f46e5;
+        }
+
+        /* Facility Markers */
+        .facility-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .facility-fire-station {
+            background: #ef4444;
+        }
+
+        .facility-hospital {
+            background: #3b82f6;
+        }
+
+        .facility-staging {
+            background: #f59e0b;
+        }
+
+        .facility-operational {
+            animation: facilityPulse 2s ease-in-out infinite;
+        }
+
+        .facility-damaged {
+            opacity: 0.6;
+            filter: grayscale(50%);
+        }
+
+        .facility-destroyed {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+
+        @keyframes facilityPulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 2px 16px rgba(16, 185, 129, 0.5); }
+        }
+
+        /* Hazard Zone Styles */
+        .hazard-gas {
+            fill: rgba(234, 179, 8, 0.3);
+            stroke: #eab308;
+            stroke-width: 2;
+            stroke-dasharray: 8, 4;
+            animation: hazardPulse 1.5s ease-in-out infinite;
+        }
+
+        .hazard-fire {
+            fill: rgba(249, 115, 22, 0.4);
+            stroke: #f97316;
+            stroke-width: 2;
+            animation: fireFlicker 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            from { fill-opacity: 0.3; }
+            to { fill-opacity: 0.5; }
+        }
+
+        .hazard-collapse {
+            fill: rgba(239, 68, 68, 0.2);
+            stroke: #ef4444;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+        }
+
+        .hazard-debris {
+            fill: rgba(107, 114, 128, 0.4);
+            stroke: #6b7280;
+            stroke-width: 1;
+        }
+
+        @keyframes hazardPulse {
+            0%, 100% { stroke-opacity: 1; }
+            50% { stroke-opacity: 0.5; }
+        }
+
+        /* Tsunami Wave Animation */
+        .tsunami-wave-line {
+            stroke: #3b82f6;
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .tsunami-inundation {
+            fill: rgba(59, 130, 246, 0.35);
+            stroke: rgba(59, 130, 246, 0.6);
+            stroke-width: 2;
+            transition: fill-opacity 2s ease;
+        }
+
+        /* Status Cards */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .status-item {
+            background: var(--bg-base);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .status-item-icon {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .status-item-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-item-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .status-operational { color: #10b981; }
+        .status-damaged { color: #f59e0b; }
+        .status-destroyed { color: #ef4444; }
+
+        /* Route Status List */
+        .route-status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .route-status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .route-status-indicator.clear { background: #10b981; }
+        .route-status-indicator.congested { background: #f59e0b; }
+        .route-status-indicator.blocked { background: #ef4444; }
+
+        .route-status-name {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .route-status-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
     </style>
 </head>
 <body>
@@ -937,6 +2250,17 @@
             <div class="logo-icon">🌊</div>
             <div class="logo-text">Quake Risk <span>Assessment</span></div>
         </div>
+        
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="modeAssessment" onclick="setMode('assessment')">
+                📊 Risk Assessment
+            </button>
+            <button class="mode-btn" id="modeSimulation" onclick="setMode('simulation')">
+                🎬 Event Simulation
+            </button>
+        </div>
+        
         <div class="header-badge">Synthetic Data Demo</div>
     </header>
 
@@ -945,7 +2269,9 @@
         <!-- Map Section -->
         <section class="map-section">
             <div id="map"></div>
-            <div class="map-legend">
+            
+            <!-- Risk Legend (Assessment Mode) -->
+            <div class="map-legend" id="riskLegend">
                 <div class="legend-title">Risk Index</div>
                 <div class="legend-scale">
                     <div class="legend-bar" style="background: var(--risk-low)"></div>
@@ -961,6 +2287,104 @@
                     <span>100</span>
         </div>
     </div>
+            
+            <!-- Damage Legend (Simulation Mode) -->
+            <div class="map-legend" id="damageLegend" style="display: none;">
+                <div class="legend-title">Building Damage</div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="damage-dot intact"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Intact (0-10%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="damage-dot minor"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Minor (10-30%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="damage-dot moderate"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Moderate (30-60%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="damage-dot severe"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Severe (60-90%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="damage-dot collapsed"></div>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary);">Collapsed (90%+)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Layer Control Panel (Simulation Mode) -->
+            <div class="layer-panel" id="layerPanel">
+                <div class="layer-panel-title">📍 Map Layers</div>
+                <div class="layer-item active" data-layer="shockwave" onclick="toggleLayer('shockwave')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">🔴 Shockwave</span>
+                </div>
+                <div class="layer-item active" data-layer="damage" onclick="toggleLayer('damage')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">🏠 Building Damage</span>
+                </div>
+                <div class="layer-item active" data-layer="epicenter" onclick="toggleLayer('epicenter')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">💥 Epicenter</span>
+                </div>
+                <div class="layer-item active" data-layer="evacuation" onclick="toggleLayer('evacuation')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">🚶 Evacuation Routes</span>
+                </div>
+                <div class="layer-item active" data-layer="responders" onclick="toggleLayer('responders')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">🚒 First Responders</span>
+                </div>
+                <div class="layer-item active" data-layer="hazards" onclick="toggleLayer('hazards')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">⚠️ Hazard Zones</span>
+                </div>
+                <div class="layer-item active" data-layer="tsunami" onclick="toggleLayer('tsunami')">
+                    <div class="layer-checkbox">✓</div>
+                    <span class="layer-label">🌊 Tsunami Wave</span>
+                </div>
+            </div>
+            
+            <!-- Alert Panel (Simulation Mode) -->
+            <div class="alert-panel" id="alertPanel"></div>
+            
+            <!-- Tsunami Warning Banner (inside map section) -->
+            <div class="tsunami-banner" id="tsunamiBanner">
+                <span style="font-size: 1.3rem;">🌊</span>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span id="tsunamiTitle" style="font-weight: 700; font-size: 0.9rem;">TSUNAMI WARNING</span>
+                    <span id="tsunamiMessage" style="font-size: 0.75rem; opacity: 0.9;">Wave arriving in <span id="tsunamiETA">--:--</span></span>
+                </div>
+            </div>
+            
+            <!-- Timeline Controls (Simulation Mode) -->
+            <div class="timeline-controls" id="timelineControls">
+                <div class="timeline-header">
+                    <div class="timeline-time">
+                        <span id="currentTime">T+0:00</span> / <span id="totalTime">25:00</span>
+                    </div>
+                    <div class="timeline-scenario" id="scenarioName">Offshore M8.0 + Tsunami</div>
+                </div>
+                <div class="timeline-bar" id="timelineBar" onclick="seekTimeline(event)">
+                    <div class="timeline-progress" id="timelineProgress" style="width: 0%"></div>
+                    <!-- Event markers will be added dynamically -->
+                </div>
+                <div class="timeline-buttons">
+                    <button class="timeline-btn" onclick="resetSimulation()" title="Reset">🔄</button>
+                    <button class="timeline-btn" onclick="stepBackward()" title="Step Back">⏮️</button>
+                    <button class="timeline-btn play" id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
+                    <button class="timeline-btn" onclick="stepForward()" title="Step Forward">⏭️</button>
+                    <select class="speed-selector" id="speedSelector" onchange="setSpeed(this.value)">
+                        <option value="1">1x</option>
+                        <option value="5">5x</option>
+                        <option value="10" selected>10x</option>
+                        <option value="30">30x</option>
+                    </select>
+                </div>
+            </div>
         </section>
 
         <!-- Sidebar -->
@@ -987,12 +2411,14 @@
 
             <!-- Sidebar Content -->
             <div class="sidebar-content">
-                <!-- Search Bar (Always Visible) -->
-                <div class="search-container" style="margin-bottom: 16px;">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search addresses...">
-                    <div class="search-dropdown" id="searchDropdown"></div>
-                </div>
+                <!-- Assessment Mode Content -->
+                <div id="assessmentSidebarContent">
+                    <!-- Search Bar (Always Visible) -->
+                    <div class="search-container" style="margin-bottom: 16px;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search addresses...">
+                        <div class="search-dropdown" id="searchDropdown"></div>
+                    </div>
                 
                 <!-- Welcome State -->
                 <div id="welcomeState">
@@ -1166,9 +2592,403 @@
                                 <div id="whatIfImpact" style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;"></div>
                             </div>
                         </div>
-            </div>
+                    </div>
+                </div>
+                </div><!-- End assessmentSidebarContent -->
+                
+                <!-- SIMULATION MODE SIDEBAR CONTENT -->
+                <div class="sim-sidebar-content" id="simSidebarContent">
+                    <!-- Scenario Selection -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">🎬</span>
+                                Select Scenario
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="scenarioList">
+                                <div class="scenario-card" data-scenario="hayward" onclick="selectScenario('hayward')">
+                                    <div class="scenario-name">Hayward Fault Rupture <span class="scenario-magnitude">M7.2</span></div>
+                                    <div class="scenario-meta">Hypothetical • 20 min simulation</div>
+                                </div>
+                                <div class="scenario-card active" data-scenario="offshore_tsunami" onclick="selectScenario('offshore_tsunami')">
+                                    <div class="scenario-name">Offshore + Tsunami <span class="scenario-magnitude">M8.0</span></div>
+                                    <div class="scenario-meta">Worst case • 25 min simulation</div>
+                                </div>
+                                <div class="scenario-card" data-scenario="marina_local" onclick="selectScenario('marina_local')">
+                                    <div class="scenario-name">Marina Local Event <span class="scenario-magnitude">M5.8</span></div>
+                                    <div class="scenario-meta">Moderate local • 10 min simulation</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Event Info -->
+                    <div class="card" id="eventInfoCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📍</span>
+                                Current Event
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="eventInfo">
+                                <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                                    Press ▶️ to start simulation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Response Outcome Tracking -->
+                    <div class="card" id="outcomeCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📊</span>
+                                Response Effectiveness
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 16px;">
+                            <div class="outcome-panel">
+                                <div class="outcome-title">
+                                    <span>🎯</span> Live Outcome Metrics
+                                </div>
+                                <div class="outcome-metrics">
+                                    <div class="outcome-metric">
+                                        <div class="outcome-metric-value positive" id="livesSaved">0</div>
+                                        <div class="outcome-metric-label">Lives Saved</div>
+                                    </div>
+                                    <div class="outcome-metric">
+                                        <div class="outcome-metric-value" id="estCasualties">--</div>
+                                        <div class="outcome-metric-label">Est. Casualties</div>
+                                    </div>
+                                    <div class="outcome-metric">
+                                        <div class="outcome-metric-value" id="buildingsCleared">0</div>
+                                        <div class="outcome-metric-label">Buildings Cleared</div>
+                                    </div>
+                                    <div class="outcome-metric">
+                                        <div class="outcome-metric-value" id="peopleEvacuated">0</div>
+                                        <div class="outcome-metric-label">Evacuated</div>
+                                    </div>
+                                </div>
+                                <div class="outcome-bar-container">
+                                    <div class="outcome-bar-label">
+                                        <span>Response Score</span>
+                                        <span id="responseScoreValue">0%</span>
+                                    </div>
+                                    <div class="outcome-bar">
+                                        <div class="outcome-bar-fill" id="responseScoreBar" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Available Resources -->
+                    <div class="card" id="resourceCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📦</span>
+                                Available Resources
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 16px;">
+                            <div class="resource-grid" id="resourceGrid">
+                                <div class="resource-item">
+                                    <div class="resource-item-header">
+                                        <span class="resource-item-name">🚑 Ambulances</span>
+                                        <span class="resource-item-count" id="resAmbulance">8/10</span>
+                                    </div>
+                                    <div class="resource-bar"><div class="resource-bar-fill" id="resAmbulanceBar" style="width: 80%;"></div></div>
+                                </div>
+                                <div class="resource-item">
+                                    <div class="resource-item-header">
+                                        <span class="resource-item-name">🚁 Helicopters</span>
+                                        <span class="resource-item-count" id="resHeli">3/4</span>
+                                    </div>
+                                    <div class="resource-bar"><div class="resource-bar-fill" id="resHeliBar" style="width: 75%;"></div></div>
+                                </div>
+                                <div class="resource-item">
+                                    <div class="resource-item-header">
+                                        <span class="resource-item-name">🚒 Fire Units</span>
+                                        <span class="resource-item-count" id="resFire">6/8</span>
+                                    </div>
+                                    <div class="resource-bar"><div class="resource-bar-fill" id="resFireBar" style="width: 75%;"></div></div>
+                                </div>
+                                <div class="resource-item">
+                                    <div class="resource-item-header">
+                                        <span class="resource-item-name">👥 SAR Teams</span>
+                                        <span class="resource-item-count" id="resSAR">5/6</span>
+                                    </div>
+                                    <div class="resource-bar"><div class="resource-bar-fill" id="resSARBar" style="width: 83%;"></div></div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Deployed Units</div>
+                                <div class="deployed-list" id="deployedList">
+                                    <div style="text-align: center; padding: 12px; color: #64748b; font-size: 0.8rem;">
+                                        No units deployed yet
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emergency Guidance (Simplified) -->
+                    <div class="card" id="guidanceCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📢</span>
+                                Situation Briefing
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="emergencyGuidance">
+                                <div style="padding: 10px; background: var(--bg-base); border-radius: 8px;">
+                                    <div id="responderGuidance" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                                        Press ▶️ to start simulation. Decision prompts will appear as the scenario unfolds.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Damage Statistics -->
+                    <div class="card" id="damageStatsCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📊</span>
+                                Damage Statistics
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="damage-stats">
+                                <div class="damage-stat-row">
+                                    <span class="damage-stat-label"><div class="damage-dot intact"></div> Intact</span>
+                                    <span class="damage-stat-value" id="statIntact" style="color: #10b981;">--</span>
+                                </div>
+                                <div class="damage-stat-row">
+                                    <span class="damage-stat-label"><div class="damage-dot minor"></div> Minor Damage</span>
+                                    <span class="damage-stat-value" id="statMinor" style="color: #f59e0b;">--</span>
+                                </div>
+                                <div class="damage-stat-row">
+                                    <span class="damage-stat-label"><div class="damage-dot moderate"></div> Moderate</span>
+                                    <span class="damage-stat-value" id="statModerate" style="color: #f97316;">--</span>
+                                </div>
+                                <div class="damage-stat-row">
+                                    <span class="damage-stat-label"><div class="damage-dot severe"></div> Severe</span>
+                                    <span class="damage-stat-value" id="statSevere" style="color: #ef4444;">--</span>
+                                </div>
+                                <div class="damage-stat-row">
+                                    <span class="damage-stat-label"><div class="damage-dot collapsed"></div> Collapsed</span>
+                                    <span class="damage-stat-value" id="statCollapsed" style="color: #6b7280;">--</span>
+                                </div>
+                                <div style="border-top: 1px solid var(--border-subtle); margin-top: 12px; padding-top: 12px;">
+                                    <div class="damage-stat-row">
+                                        <span class="damage-stat-label" style="font-weight: 600;">Total Buildings</span>
+                                        <span class="damage-stat-value" id="statTotal" style="color: var(--text-primary);">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Event Log -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">📋</span>
+                                Event Log
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="eventLog" style="max-height: 200px; overflow-y: auto;">
+                                <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">
+                                    Events will appear here during simulation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Evacuation Status -->
+                    <div class="card" id="evacuationCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">🚶</span>
+                                Evacuation Status
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="evacuationStatus">
+                                <div class="status-grid" style="margin-bottom: 12px;">
+                                    <div class="status-item">
+                                        <div class="status-item-value status-operational" id="routesClear">4</div>
+                                        <div class="status-item-label">Routes Clear</div>
+                                    </div>
+                                    <div class="status-item">
+                                        <div class="status-item-value status-destroyed" id="routesBlocked">0</div>
+                                        <div class="status-item-label">Routes Blocked</div>
+                                    </div>
+                                </div>
+                                <div id="routeStatusList" style="font-size: 0.85rem;">
+                                    <div class="route-status-item">
+                                        <div class="route-status-indicator clear"></div>
+                                        <span class="route-status-name">Fillmore St → Pacific Heights</span>
+                                        <span class="route-status-info">0.9km</span>
+                                    </div>
+                                    <div class="route-status-item">
+                                        <div class="route-status-indicator clear"></div>
+                                        <span class="route-status-name">Divisadero St → Alta Plaza</span>
+                                        <span class="route-status-info">1.0km</span>
+                                    </div>
+                                    <div class="route-status-item">
+                                        <div class="route-status-indicator clear"></div>
+                                        <span class="route-status-name">Scott St → Presidio</span>
+                                        <span class="route-status-info">1.2km</span>
+                                    </div>
+                                    <div class="route-status-item">
+                                        <div class="route-status-indicator clear"></div>
+                                        <span class="route-status-name">Broderick St South</span>
+                                        <span class="route-status-info">0.6km</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- First Responder Status -->
+                    <div class="card" id="responderCard">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-title-icon">🚒</span>
+                                Emergency Response
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="status-grid">
+                                <div class="status-item">
+                                    <div class="status-item-icon">🚒</div>
+                                    <div class="status-item-value" id="stationsOperational">2</div>
+                                    <div class="status-item-label">Fire Stations</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-item-icon">🏥</div>
+                                    <div class="status-item-value" id="hospitalsOperational">3</div>
+                                    <div class="status-item-label">Hospitals</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-item-icon">⚠️</div>
+                                    <div class="status-item-value status-damaged" id="activeHazards">0</div>
+                                    <div class="status-item-label">Active Hazards</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-item-icon">🚧</div>
+                                    <div class="status-item-value" id="stagingAreas">2</div>
+                                    <div class="status-item-label">Staging Areas</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Facility Status</div>
+                                <div id="facilityStatusList" style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    All facilities operational
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </aside>
     </main>
+
+    <!-- Post-Disaster Summary Modal -->
+    <div class="summary-overlay" id="summaryOverlay" onclick="closeSummaryIfBackdrop(event)">
+        <div class="summary-modal" id="summaryModal">
+            <div class="summary-header">
+                <div class="summary-header-content">
+                    <h2>📋 Post-Event Summary Report</h2>
+                    <p id="summaryScenario">Offshore M8.0 + Tsunami Scenario Complete</p>
+                </div>
+                <button class="summary-close" onclick="closeSummary()">✕</button>
+            </div>
+            <div class="summary-body">
+                <!-- Key Statistics -->
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="summary-stat-value critical" id="summaryCollapsed">0</div>
+                        <div class="summary-stat-label">Collapsed</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value warning" id="summarySevere">0</div>
+                        <div class="summary-stat-label">Severe Damage</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="summaryModerate">0</div>
+                        <div class="summary-stat-label">Moderate</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value success" id="summaryIntact">0</div>
+                        <div class="summary-stat-label">Intact</div>
+                    </div>
+                </div>
+                
+                <!-- What Worked Well -->
+                <div class="summary-section">
+                    <div class="summary-section-title">
+                        <span>✅</span> What Worked Well
+                    </div>
+                    <ul class="summary-list" id="summaryPositives">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Areas for Improvement -->
+                <div class="summary-section">
+                    <div class="summary-section-title">
+                        <span>⚠️</span> Areas for Improvement
+                    </div>
+                    <ul class="summary-list" id="summaryNegatives">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                
+                <!-- Immediate Next Steps -->
+                <div class="summary-section">
+                    <div class="summary-section-title">
+                        <span>🚨</span> Immediate Actions Required
+                    </div>
+                    <div class="summary-actions" id="summaryActions">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="summary-footer">
+                <button class="summary-btn secondary" onclick="closeSummary()">Close</button>
+                <button class="summary-btn primary" onclick="exportSummary()">📄 Export Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Prompt Modal -->
+    <div class="decision-overlay" id="decisionOverlay">
+        <div class="decision-modal" id="decisionModal">
+            <div class="decision-header">
+                <h3><span>🚨</span> <span id="decisionTitle">DECISION REQUIRED</span></h3>
+                <div class="decision-timer" id="decisionTimer">⏱️ 0:30</div>
+            </div>
+            <div class="decision-body">
+                <div class="decision-situation">
+                    <div class="decision-situation-title">Current Situation</div>
+                    <div class="decision-situation-text" id="decisionSituation">
+                        Loading situation...
+                    </div>
+                </div>
+                <div class="decision-options" id="decisionOptions">
+                    <!-- Options populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -1180,6 +3000,459 @@
     let sfNeighborhoods, processedHomes = [];
     let selectedHome = null;
     let marinaShowingBuildings = false; // Track if Marina is in building view mode
+    
+    // ============================================
+    // SIMULATION STATE
+    // ============================================
+    let currentMode = 'assessment'; // 'assessment' or 'simulation'
+    let simulationTime = 0; // Current time in seconds
+    let totalDuration = 1500; // 25 minutes for offshore_tsunami scenario
+    let isPlaying = false;
+    let playbackSpeed = 10; // Default 10x speed
+    let animationFrameId = null;
+    let lastFrameTime = 0;
+    let currentScenario = 'offshore_tsunami';
+    let shockwaveLayers = [];
+    let epicenterMarker = null;
+    let buildingDamage = {}; // Track TOTAL damage per building (earthquake + tsunami)
+    let tsunamiDamage = {}; // Track tsunami damage separately (persists after receding)
+    let tsunamiDamagedBuildings = new Set(); // Track buildings damaged by tsunami (one-time application)
+    let activeAlerts = [];
+    let triggeredAlerts = new Set(); // Track which alerts have been triggered this session
+    let eventLogEntries = [];
+    
+    // Layer visibility state
+    let layerVisibility = {
+        shockwave: true,
+        damage: true,
+        epicenter: true,
+        evacuation: true,
+        responders: true,
+        hazards: true,
+        tsunami: true
+    };
+    
+    // Post-disaster summary state
+    let summaryShown = false;
+    
+    // ============================================
+    // FIRST RESPONDER TRAINING SYSTEM
+    // ============================================
+    
+    // Resources state
+    let resources = {
+        ambulances: { available: 10, total: 10 },
+        helicopters: { available: 4, total: 4 },
+        fireUnits: { available: 8, total: 8 },
+        sarTeams: { available: 6, total: 6 }
+    };
+    
+    // Deployed units tracking
+    let deployedUnits = [];
+    let deployedUnitMarkers = {}; // Map markers for deployed units
+    
+    // Outcome tracking
+    let outcomeMetrics = {
+        livesSaved: 0,
+        estimatedCasualties: 0,
+        buildingsCleared: 0,
+        peopleEvacuated: 0,
+        responseScore: 0,
+        decisionsCorrect: 0,
+        decisionsTotal: 0
+    };
+    
+    // Decision system state
+    let pendingDecisions = [];
+    let decisionHistory = [];
+    let currentDecision = null;
+    let decisionTimerId = null;
+    let triggeredDecisions = new Set();
+    
+    // Decision definitions for scenarios
+    const scenarioDecisions = {
+        offshore_tsunami: [
+            {
+                id: 'initial_response',
+                triggerTime: 15,
+                title: 'INITIAL DEPLOYMENT',
+                situation: 'M8.0 earthquake detected offshore. Shaking felt across the Bay Area. Reports of structural damage coming in from Marina District.',
+                options: [
+                    {
+                        id: 'deploy_all',
+                        icon: '🚀',
+                        title: 'Full Immediate Response',
+                        meta: { eta: '5-8 min', units: 'All available' },
+                        impact: 'Deploy all SAR teams and fire units to Marina immediately',
+                        effect: { livesSaved: 45, resourceCost: { sarTeams: 4, fireUnits: 5 }, score: 20 }
+                    },
+                    {
+                        id: 'staged_response',
+                        icon: '📍',
+                        title: 'Staged Response',
+                        meta: { eta: '3-5 min', units: '50% initially' },
+                        impact: 'Send half now, keep reserves for developing situations',
+                        effect: { livesSaved: 30, resourceCost: { sarTeams: 2, fireUnits: 3 }, score: 15 }
+                    },
+                    {
+                        id: 'assess_first',
+                        icon: '🔍',
+                        title: 'Assess Before Deploying',
+                        meta: { eta: '10-15 min', units: 'Recon only' },
+                        impact: 'Send aerial reconnaissance first, then deploy based on findings',
+                        effect: { livesSaved: 15, resourceCost: { helicopters: 1 }, score: 5 }
+                    }
+                ],
+                timeLimit: 30,
+                optimalChoice: 'deploy_all'
+            },
+            {
+                id: 'tsunami_warning',
+                triggerTime: 495, // Just after tsunami warning
+                title: 'TSUNAMI EVACUATION DECISION',
+                situation: 'Tsunami warning issued! Wave ETA 7 minutes. SAR teams currently operating in coastal collapse sites with potential trapped survivors.',
+                options: [
+                    {
+                        id: 'evacuate_all',
+                        icon: '🏃',
+                        title: 'Immediate Full Evacuation',
+                        meta: { eta: 'Now', risk: 'Abandon active rescues' },
+                        impact: 'Pull all teams to high ground immediately. Abandon in-progress rescues.',
+                        effect: { livesSaved: -20, teamsSaved: 6, evacuated: 500, score: 25 }
+                    },
+                    {
+                        id: 'continue_rescue',
+                        icon: '⛑️',
+                        title: 'Continue Critical Rescues',
+                        meta: { eta: '5 min', risk: 'Teams in danger zone' },
+                        impact: 'Complete extractions in progress, then evacuate. High risk to teams.',
+                        effect: { livesSaved: 35, teamsAtRisk: 3, evacuated: 200, score: 10 }
+                    },
+                    {
+                        id: 'split_teams',
+                        icon: '↔️',
+                        title: 'Split Operations',
+                        meta: { eta: '3 min', risk: 'Moderate' },
+                        impact: 'Half continue rescue, half assist civilian evacuation',
+                        effect: { livesSaved: 15, teamsSaved: 3, evacuated: 350, score: 18 }
+                    }
+                ],
+                timeLimit: 20,
+                optimalChoice: 'split_teams'
+            },
+            {
+                id: 'post_tsunami',
+                triggerTime: 1260, // After tsunami recedes
+                title: 'POST-TSUNAMI OPERATIONS',
+                situation: 'Tsunami has receded. Extensive water damage visible. Multiple buildings now showing additional collapse. Resources are depleted.',
+                options: [
+                    {
+                        id: 'sar_priority',
+                        icon: '🔍',
+                        title: 'Prioritize Search & Rescue',
+                        meta: { focus: 'Trapped survivors', duration: '2+ hours' },
+                        impact: 'Focus all remaining teams on collapsed structures',
+                        effect: { livesSaved: 40, buildingsCleared: 15, score: 22 }
+                    },
+                    {
+                        id: 'medical_priority',
+                        icon: '🏥',
+                        title: 'Prioritize Medical Response',
+                        meta: { focus: 'Injured civilians', duration: '1-2 hours' },
+                        impact: 'Set up triage stations, treat walking wounded first',
+                        effect: { livesSaved: 25, treated: 150, score: 18 }
+                    },
+                    {
+                        id: 'infrastructure',
+                        icon: '🔧',
+                        title: 'Secure Infrastructure',
+                        meta: { focus: 'Gas/fire hazards', duration: '1 hour' },
+                        impact: 'Coordinate with utilities to prevent secondary disasters',
+                        effect: { livesSaved: 10, hazardsPrevented: 8, score: 12 }
+                    }
+                ],
+                timeLimit: 45,
+                optimalChoice: 'sar_priority'
+            }
+        ],
+        hayward: [
+            {
+                id: 'hayward_initial',
+                triggerTime: 10,
+                title: 'EARTHQUAKE RESPONSE',
+                situation: 'M7.2 earthquake on Hayward Fault. Major damage reports across East Bay and Marina District. Multiple collapse sites identified.',
+                options: [
+                    {
+                        id: 'concentrate_marina',
+                        icon: '📍',
+                        title: 'Concentrate on Marina',
+                        meta: { eta: '5 min', coverage: 'Marina only' },
+                        impact: 'Focus all resources on known high-risk Marina district',
+                        effect: { livesSaved: 50, score: 22 }
+                    },
+                    {
+                        id: 'distribute_wide',
+                        icon: '🌐',
+                        title: 'Distribute Widely',
+                        meta: { eta: '8-12 min', coverage: 'Multiple areas' },
+                        impact: 'Spread teams across all affected neighborhoods',
+                        effect: { livesSaved: 35, score: 15 }
+                    }
+                ],
+                timeLimit: 30,
+                optimalChoice: 'concentrate_marina'
+            }
+        ],
+        marina_local: [
+            {
+                id: 'local_initial',
+                triggerTime: 10,
+                title: 'LOCAL EVENT RESPONSE',
+                situation: 'M5.8 earthquake centered in Marina. Moderate damage to older buildings. Some structural collapses reported.',
+                options: [
+                    {
+                        id: 'standard_response',
+                        icon: '🚒',
+                        title: 'Standard Protocol Response',
+                        meta: { eta: '5 min', units: '3 teams' },
+                        impact: 'Deploy standard earthquake response package',
+                        effect: { livesSaved: 20, score: 18 }
+                    },
+                    {
+                        id: 'elevated_response',
+                        icon: '⬆️',
+                        title: 'Elevated Response',
+                        meta: { eta: '4 min', units: '5 teams' },
+                        impact: 'Deploy additional resources given Marina vulnerability',
+                        effect: { livesSaved: 30, score: 22 }
+                    }
+                ],
+                timeLimit: 25,
+                optimalChoice: 'elevated_response'
+            }
+        ]
+    };
+    
+    // ============================================
+    // SCENARIO DATA
+    // ============================================
+    const scenarios = {
+        hayward: {
+            id: 'hayward',
+            name: 'Hayward Fault Rupture',
+            description: 'Hypothetical M7.2 earthquake on Hayward Fault',
+            duration: 1200, // 20 minutes
+            events: [
+                { time: 0, type: 'earthquake', location: [37.6688, -122.0808], magnitude: 7.2, depth: 8, name: 'Main Rupture' },
+                { time: 60, type: 'aftershock', location: [37.70, -122.10], magnitude: 5.8, depth: 10, name: 'Aftershock 1' },
+                { time: 180, type: 'aftershock', location: [37.65, -122.05], magnitude: 5.4, depth: 12, name: 'Aftershock 2' },
+                { time: 360, type: 'aftershock', location: [37.72, -122.08], magnitude: 5.1, depth: 8, name: 'Aftershock 3' },
+                { time: 600, type: 'aftershock', location: [37.68, -122.12], magnitude: 4.7, depth: 15, name: 'Aftershock 4' }
+            ],
+            alerts: [
+                { time: 5, type: 'critical', title: 'MAJOR EARTHQUAKE', body: 'M7.2 earthquake on Hayward Fault. Significant damage expected.', duration: 90 },
+                { time: 45, type: 'critical', title: 'EMERGENCY DECLARED', body: 'State of emergency declared for Bay Area.', duration: 180 },
+                { time: 180, type: 'warning', title: 'INFRASTRUCTURE DAMAGE', body: 'Reports of bridge and road damage. Avoid travel.', duration: 300 }
+            ]
+        },
+        offshore_tsunami: {
+            id: 'offshore_tsunami',
+            name: 'Offshore M8.0 + Tsunami',
+            description: 'Worst-case offshore earthquake with tsunami',
+            duration: 1500, // 25 minutes
+            events: [
+                { time: 0, type: 'earthquake', location: [37.50, -123.20], magnitude: 8.0, depth: 25, name: 'Offshore Quake' },
+                { time: 90, type: 'aftershock', location: [37.55, -123.15], magnitude: 6.2, depth: 20, name: 'Aftershock 1' },
+                { time: 480, type: 'tsunami', origin: [37.50, -123.20], waveHeight: 4.5, arrivalTime: 900, name: 'Tsunami Warning' },
+                { time: 900, type: 'tsunami_arrival', location: [37.803, -122.435], waveHeight: 3.2, name: 'Tsunami Impact' }
+            ],
+            alerts: [
+                { time: 5, type: 'critical', title: 'MASSIVE EARTHQUAKE', body: 'M8.0 earthquake detected offshore. Tsunami possible.', duration: 120 },
+                { time: 60, type: 'critical', title: 'TSUNAMI WARNING', body: 'Tsunami warning issued. ETA: 14 minutes to Marina.', duration: 600 },
+                { time: 300, type: 'critical', title: 'EVACUATE NOW', body: 'Immediate evacuation required for coastal areas.', duration: 600 },
+                { time: 900, type: 'critical', title: 'TSUNAMI ARRIVAL', body: 'Tsunami waves arriving at coastline.', duration: 300 }
+            ]
+        },
+        marina_local: {
+            id: 'marina_local',
+            name: 'Marina Local Event',
+            description: 'Moderate M5.8 earthquake centered near Marina',
+            duration: 600, // 10 minutes
+            events: [
+                { time: 0, type: 'earthquake', location: [37.803, -122.435], magnitude: 5.8, depth: 5, name: 'Local Shock' },
+                { time: 90, type: 'aftershock', location: [37.805, -122.440], magnitude: 4.2, depth: 4, name: 'Aftershock 1' },
+                { time: 240, type: 'aftershock', location: [37.800, -122.430], magnitude: 3.8, depth: 6, name: 'Aftershock 2' }
+            ],
+            alerts: [
+                { time: 5, type: 'warning', title: 'EARTHQUAKE DETECTED', body: 'M5.8 earthquake near Marina District.', duration: 60 },
+                { time: 30, type: 'advisory', title: 'CHECK FOR DAMAGE', body: 'Inspect buildings for cracks and gas leaks.', duration: 120 }
+            ]
+        }
+    };
+    
+    // ============================================
+    // PHASE 2: EVACUATION ROUTES DATA
+    // ============================================
+    const evacuationRoutes = [
+        {
+            id: 'route-1',
+            name: 'Fillmore St → Pacific Heights',
+            type: 'primary',
+            distance: '0.9 km',
+            coordinates: [
+                [-122.4355, 37.8020],  // Start in Marina
+                [-122.4355, 37.7990],
+                [-122.4355, 37.7960],
+                [-122.4355, 37.7930]   // End at Pacific Heights (high ground)
+            ],
+            elevation: 'uphill',
+            status: 'clear'
+        },
+        {
+            id: 'route-2',
+            name: 'Divisadero St → Alta Plaza',
+            type: 'primary',
+            distance: '1.0 km',
+            coordinates: [
+                [-122.4400, 37.8010],  // Start in Marina
+                [-122.4400, 37.7980],
+                [-122.4400, 37.7950],
+                [-122.4390, 37.7915]   // End at Alta Plaza Park (high ground)
+            ],
+            elevation: 'uphill',
+            status: 'clear'
+        },
+        {
+            id: 'route-3',
+            name: 'Scott St → Presidio',
+            type: 'secondary',
+            distance: '1.2 km',
+            coordinates: [
+                [-122.4420, 37.8010],  // Start in Marina
+                [-122.4450, 37.7985],
+                [-122.4490, 37.7960],
+                [-122.4530, 37.7940]   // End toward Presidio
+            ],
+            elevation: 'uphill',
+            status: 'clear'
+        },
+        {
+            id: 'route-4',
+            name: 'Broderick St South',
+            type: 'secondary',
+            distance: '0.7 km',
+            coordinates: [
+                [-122.4410, 37.8020],  // Start in Marina
+                [-122.4410, 37.7995],
+                [-122.4410, 37.7970],
+                [-122.4410, 37.7945]   // End heading south
+            ],
+            elevation: 'uphill',
+            status: 'clear'
+        }
+    ];
+    
+    const assemblyPoints = [
+        {
+            id: 'ap-1',
+            name: 'Alta Plaza Park',
+            location: [-122.4385, 37.7910],
+            capacity: 3000,
+            elevation: 65,
+            facilities: ['First Aid', 'Water', 'Shelter'],
+            status: 'operational'
+        },
+        {
+            id: 'ap-2',
+            name: 'Lafayette Park',
+            location: [-122.4280, 37.7920],
+            capacity: 2500,
+            elevation: 55,
+            facilities: ['First Aid', 'Water', 'Shelter', 'Medical'],
+            status: 'operational'
+        },
+        {
+            id: 'ap-3',
+            name: 'Presidio Heights',
+            location: [-122.4520, 37.7940],
+            capacity: 2000,
+            elevation: 80,
+            facilities: ['First Aid', 'Water'],
+            status: 'operational'
+        }
+    ];
+    
+    // ============================================
+    // PHASE 2: EMERGENCY FACILITIES DATA
+    // ============================================
+    const emergencyFacilities = {
+        fireStations: [
+            {
+                id: 'fs-16',
+                name: 'Station 16 - Marina',
+                location: [-122.4372, 37.8002],
+                status: 'operational',
+                personnel: 12,
+                responseRadius: 2000
+            },
+            {
+                id: 'fs-28',
+                name: 'Station 28 - Presidio',
+                location: [-122.4550, 37.7920],
+                status: 'operational',
+                personnel: 8,
+                responseRadius: 2500
+            }
+        ],
+        hospitals: [
+            {
+                id: 'hosp-cpmc',
+                name: 'CPMC Pacific',
+                location: [-122.4444, 37.7906],
+                capacity: 85,
+                status: 'operational'
+            },
+            {
+                id: 'hosp-stfrancis',
+                name: 'St. Francis Memorial',
+                location: [-122.4150, 37.7880],
+                capacity: 92,
+                status: 'operational'
+            },
+            {
+                id: 'hosp-sfgeneral',
+                name: 'SF General Hospital',
+                location: [-122.4052, 37.7554],
+                capacity: 78,
+                status: 'operational'
+            }
+        ],
+        stagingAreas: [
+            {
+                id: 'stage-1',
+                name: 'Marina Green Staging',
+                location: [-122.4400, 37.8055],
+                status: 'standby'
+            },
+            {
+                id: 'stage-2',
+                name: 'Fort Mason Staging',
+                location: [-122.4280, 37.8050],
+                status: 'standby'
+            }
+        ]
+    };
+    
+    // Phase 2 layer state
+    let evacuationLayer = null;
+    let assemblyMarkers = [];
+    let facilityMarkers = [];
+    let hazardLayers = [];
+    let tsunamiWaveLayer = null;
+    let tsunamiInundationLayer = null;
+    let activeHazards = [];
+    let routeStatuses = {};
+    let facilityStatuses = {};
 
     const marinaRisk = {
         name: "Marina",
@@ -1608,23 +3881,23 @@
                     <div style="background: var(--bg-card); padding: 10px; border-radius: 8px; text-align: center;">
                         <div style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total</div>
                         <div style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary);">${neighborResult.neighbors.length}</div>
-                        <div style="font-size: 0.6rem; color: var(--text-muted);">buildings</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">buildings</div>
                     </div>
                     <div style="background: var(--bg-card); padding: 10px; border-radius: 8px; text-align: center;">
                         <div style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Avg Risk</div>
                         <div style="font-size: 1.3rem; font-weight: 700; color: ${getRiskColor(neighborResult.avgRisk)};">${neighborResult.avgRisk}</div>
-                        <div style="font-size: 0.6rem; color: var(--text-muted);">score</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">score</div>
                     </div>
                 </div>
                 
                 <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                     <div style="flex: 1; background: var(--bg-card); padding: 8px; border-radius: 8px; text-align: center;">
                         <div style="font-size: 1rem; font-weight: 700; color: #ef4444;">${neighborResult.highRiskCount || 0}</div>
-                        <div style="font-size: 0.6rem; color: var(--text-muted);">High-Risk</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">High-Risk</div>
                     </div>
                     <div style="flex: 1; background: var(--bg-card); padding: 8px; border-radius: 8px; text-align: center;">
                         <div style="font-size: 1rem; font-weight: 700; color: #f59e0b;">${neighborResult.vulnerableCount || 0}</div>
-                        <div style="font-size: 0.6rem; color: var(--text-muted);">Vulnerable</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Vulnerable</div>
                     </div>
                 </div>
                 
@@ -2013,6 +4286,2323 @@
     }
 
     // ============================================
+    // SIMULATION MODE FUNCTIONS
+    // ============================================
+    
+    function setMode(mode) {
+        currentMode = mode;
+        
+        // Update mode toggle buttons
+        document.getElementById('modeAssessment').classList.toggle('active', mode === 'assessment');
+        document.getElementById('modeSimulation').classList.toggle('active', mode === 'simulation');
+        
+        // Toggle sidebar content visibility
+        document.getElementById('assessmentSidebarContent').style.display = mode === 'assessment' ? 'block' : 'none';
+        document.getElementById('simSidebarContent').classList.toggle('visible', mode === 'simulation');
+        
+        // Hide progress steps bar in simulation mode (not relevant)
+        document.querySelector('.progress-bar').style.display = mode === 'assessment' ? 'flex' : 'none';
+        
+        // Toggle map overlays
+        document.getElementById('riskLegend').style.display = mode === 'assessment' ? 'block' : 'none';
+        document.getElementById('damageLegend').style.display = mode === 'simulation' ? 'block' : 'none';
+        document.getElementById('timelineControls').classList.toggle('visible', mode === 'simulation');
+        document.getElementById('layerPanel').classList.toggle('visible', mode === 'simulation');
+        
+        if (mode === 'simulation') {
+            // Switch to simulation mode
+            if (!marinaShowingBuildings) {
+                showMarina(); // Automatically show Marina buildings
+            }
+            
+            // Initialize Phase 2 layers
+            initEvacuationRoutes();
+            initFirstResponderLayer();
+            
+            resetSimulation();
+            updateDamageStats();
+            } else {
+            // Switch back to assessment mode
+            stopSimulation();
+            clearShockwaves();
+            clearAlerts();
+            resetBuildingColors();
+            
+            // Clear Phase 2 layers
+            if (evacuationLayer) {
+                map.removeLayer(evacuationLayer);
+            }
+            facilityMarkers.forEach(m => {
+                if (map.hasLayer(m)) map.removeLayer(m);
+            });
+            hazardLayers.forEach(l => {
+                if (map.hasLayer(l)) map.removeLayer(l);
+            });
+            clearTsunamiLayers();
+        }
+    }
+    
+    function selectScenario(scenarioId) {
+        currentScenario = scenarioId;
+        const scenario = scenarios[scenarioId];
+        
+        // Update scenario UI
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.scenario === scenarioId);
+        });
+        
+        // Update timeline
+        totalDuration = scenario.duration;
+        document.getElementById('scenarioName').textContent = scenario.name;
+        document.getElementById('totalTime').textContent = formatTime(totalDuration);
+        
+        // Add event markers to timeline
+        updateTimelineMarkers(scenario);
+        
+        // Reset simulation
+        resetSimulation();
+    }
+    
+    function updateTimelineMarkers(scenario) {
+        const timelineBar = document.getElementById('timelineBar');
+        
+        // Remove existing markers
+        timelineBar.querySelectorAll('.timeline-marker').forEach(m => m.remove());
+        
+        // Add markers for each event
+        scenario.events.forEach(event => {
+            const percentage = (event.time / scenario.duration) * 100;
+            const marker = document.createElement('div');
+            marker.className = `timeline-marker ${event.type}`;
+            marker.style.left = `${percentage}%`;
+            marker.title = `${event.name} (T+${formatTime(event.time)})`;
+            marker.onclick = (e) => {
+                e.stopPropagation();
+                simulationTime = event.time;
+                updateSimulation(simulationTime);
+                updateTimelineUI();
+            };
+            timelineBar.appendChild(marker);
+        });
+    }
+    
+    function togglePlayPause() {
+        if (isPlaying) {
+            pauseSimulation();
+        } else {
+            playSimulation();
+        }
+    }
+    
+    function playSimulation() {
+        if (simulationTime >= totalDuration) {
+            resetSimulation();
+        }
+        isPlaying = true;
+        document.getElementById('playPauseBtn').textContent = '⏸️';
+        lastFrameTime = performance.now();
+        animationFrameId = requestAnimationFrame(simulationLoop);
+        addEventLog('▶️ Simulation started', 'info');
+    }
+    
+    function pauseSimulation() {
+        isPlaying = false;
+        document.getElementById('playPauseBtn').textContent = '▶️';
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    }
+    
+    function stopSimulation() {
+        pauseSimulation();
+        simulationTime = 0;
+        updateTimelineUI();
+    }
+    
+    function resetSimulation() {
+        stopSimulation();
+        simulationTime = 0;
+        buildingDamage = {};
+        tsunamiDamage = {}; // Reset tsunami damage values
+        tsunamiDamagedBuildings = new Set(); // Reset tsunami damage tracking
+        triggeredAlerts = new Set(); // Reset triggered alerts so they can fire again
+        summaryShown = false; // Allow summary to show again
+        resetResponseSystem(); // Reset first responder training system
+        clearShockwaves();
+        clearAlerts();
+        eventLogEntries = [];
+        document.getElementById('eventLog').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">Events will appear here during simulation</div>';
+        document.getElementById('eventInfo').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">Press ▶️ to start simulation</div>';
+        resetBuildingColors();
+        updateTimelineUI();
+        updateDamageStats();
+        
+        // Phase 2 resets
+        routeStatuses = {};
+        activeHazards = [];
+        hazardLayers.forEach(l => { if (map.hasLayer(l)) map.removeLayer(l); });
+        hazardLayers = [];
+        clearTsunamiLayers();
+        
+        // Reset route statuses in UI
+        document.querySelectorAll('.route-status-indicator').forEach(el => {
+            el.className = 'route-status-indicator clear';
+        });
+        document.getElementById('routesClear').textContent = evacuationRoutes.length;
+        document.getElementById('routesBlocked').textContent = '0';
+        document.getElementById('activeHazards').textContent = '0';
+        document.getElementById('facilityStatusList').innerHTML = '<span style="color: var(--risk-low);">✓ All facilities operational</span>';
+    }
+    
+    function setSpeed(speed) {
+        playbackSpeed = parseInt(speed);
+    }
+    
+    function stepForward() {
+        pauseSimulation();
+        simulationTime = Math.min(simulationTime + 30, totalDuration);
+        updateSimulation(simulationTime);
+        updateTimelineUI();
+    }
+    
+    function stepBackward() {
+        pauseSimulation();
+        simulationTime = Math.max(simulationTime - 30, 0);
+        updateSimulation(simulationTime);
+        updateTimelineUI();
+    }
+    
+    function seekTimeline(event) {
+        const bar = document.getElementById('timelineBar');
+        const rect = bar.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const percentage = x / rect.width;
+        simulationTime = Math.max(0, Math.min(percentage * totalDuration, totalDuration));
+        updateSimulation(simulationTime);
+        updateTimelineUI();
+    }
+    
+    function simulationLoop(currentTime) {
+        if (!isPlaying) return;
+        
+        const deltaTime = (currentTime - lastFrameTime) / 1000; // Convert to seconds
+        lastFrameTime = currentTime;
+        
+        // Advance simulation time based on playback speed
+        simulationTime += deltaTime * playbackSpeed;
+        
+        if (simulationTime >= totalDuration) {
+            simulationTime = totalDuration;
+            pauseSimulation();
+            addEventLog('✅ Simulation complete', 'info');
+        }
+        
+        updateSimulation(simulationTime);
+        updateTimelineUI();
+        
+        if (isPlaying) {
+            animationFrameId = requestAnimationFrame(simulationLoop);
+        }
+    }
+    
+    function updateSimulation(time) {
+        const scenario = scenarios[currentScenario];
+        
+        // Process events that should be active at this time
+        scenario.events.forEach(event => {
+            if (event.time <= time) {
+                processEvent(event, time);
+            }
+        });
+        
+        // Check for alerts - use triggeredAlerts to track which have been shown this session
+        scenario.alerts.forEach(alert => {
+            const alertKey = `${currentScenario}-${alert.title}-${alert.time}`;
+            if (alert.time <= time && !triggeredAlerts.has(alertKey)) {
+                showAlert(alert);
+                triggeredAlerts.add(alertKey);
+            }
+        });
+        
+        // Update building damage based on current time
+        updateBuildingDamage(scenario, time);
+        updateDamageStats();
+        
+        // Phase 2 updates
+        updateRouteStatuses(time);
+        updateFacilityStatuses(time);
+        updateHazardZones(time);
+        updateTsunamiVisualization(scenario, time);
+        updateEmergencyGuidance(scenario, time);
+        
+        // First Responder Training System
+        checkForDecisions(scenario, time);
+        updateOutcomeDisplay();
+        updateDeployedList();
+        
+        checkForSimulationEnd(scenario, time);
+    }
+    
+    function processEvent(event, currentTime) {
+        const timeSinceEvent = currentTime - event.time;
+        
+        if (event.type === 'earthquake' || event.type === 'aftershock') {
+            if (layerVisibility.shockwave && timeSinceEvent >= 0 && timeSinceEvent < 60) {
+                showShockwave(event, timeSinceEvent);
+            } else if (timeSinceEvent >= 60) {
+                // Remove shockwave after 60 seconds
+                removeShockwave(event.time);
+            }
+            if (layerVisibility.epicenter && timeSinceEvent >= 0 && timeSinceEvent < 300) {
+                showEpicenter(event);
+            } else if (timeSinceEvent >= 300 && epicenterMarker) {
+                // Remove epicenter marker after 5 minutes
+                map.removeLayer(epicenterMarker);
+                epicenterMarker = null;
+            }
+            if (timeSinceEvent >= 0) {
+                updateEventInfo(event, timeSinceEvent);
+            }
+        }
+        
+        if (event.type === 'tsunami' && timeSinceEvent >= 0) {
+            // Show tsunami warning
+            updateEventInfo(event, timeSinceEvent);
+        }
+    }
+    
+    function removeShockwave(eventTime) {
+        const existingLayer = shockwaveLayers.find(l => l.eventTime === eventTime);
+        if (existingLayer) {
+            if (map.hasLayer(existingLayer.layer)) {
+                map.removeLayer(existingLayer.layer);
+            }
+            shockwaveLayers = shockwaveLayers.filter(l => l.eventTime !== eventTime);
+        }
+    }
+    
+    function showShockwave(event, elapsed) {
+        // Remove old shockwaves for this event
+        const existingLayer = shockwaveLayers.find(l => l.eventTime === event.time);
+        if (existingLayer) {
+            map.removeLayer(existingLayer.layer);
+            shockwaveLayers = shockwaveLayers.filter(l => l.eventTime !== event.time);
+        }
+        
+        // Calculate radius based on elapsed time (expand over 60 seconds)
+        const maxRadius = event.magnitude * 15000; // Scale with magnitude
+        const radius = (elapsed / 60) * maxRadius;
+        const opacity = Math.max(0.1, 0.8 - (elapsed / 60) * 0.7);
+        
+        // Create expanding circle
+        const shockwave = L.circle(event.location, {
+            radius: radius,
+            color: event.type === 'earthquake' ? '#ef4444' : '#f97316',
+            fillColor: event.type === 'earthquake' ? '#ef4444' : '#f97316',
+            fillOpacity: opacity * 0.15,
+            weight: 2,
+            opacity: opacity,
+            dashArray: event.type === 'aftershock' ? '5, 5' : null
+        }).addTo(map);
+        
+        shockwaveLayers.push({ layer: shockwave, eventTime: event.time });
+    }
+    
+    function showEpicenter(event) {
+        if (epicenterMarker) {
+            map.removeLayer(epicenterMarker);
+        }
+        
+        const icon = L.divIcon({
+            html: `<div style="
+                width: 30px;
+                height: 30px;
+                background: radial-gradient(circle, #ef4444 0%, transparent 70%);
+                border: 3px solid #ef4444;
+                border-radius: 50%;
+                animation: epicenterPulse 1s ease-in-out infinite;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            ">💥</div>`,
+            className: 'epicenter-marker',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        epicenterMarker = L.marker(event.location, { icon }).addTo(map);
+        epicenterMarker.bindPopup(`
+            <div class="event-popup">
+                <div class="event-popup-title">
+                    ${event.type === 'earthquake' ? '🔴' : '🟠'} ${event.name}
+                </div>
+                <div class="event-popup-stat">
+                    <span class="event-popup-label">Magnitude:</span>
+                    <span class="event-popup-value" style="color: #ef4444;">M${event.magnitude}</span>
+                </div>
+                <div class="event-popup-stat">
+                    <span class="event-popup-label">Depth:</span>
+                    <span class="event-popup-value">${event.depth} km</span>
+                </div>
+                <div class="event-popup-stat">
+                    <span class="event-popup-label">Location:</span>
+                    <span class="event-popup-value">${event.location[0].toFixed(3)}°N, ${Math.abs(event.location[1]).toFixed(3)}°W</span>
+                </div>
+            </div>
+        `);
+    }
+    
+    function updateEventInfo(event, elapsed) {
+        const infoHtml = `
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 8px;">
+                    ${event.type === 'earthquake' ? '🔴' : event.type === 'aftershock' ? '🟠' : '🌊'}
+                </div>
+                <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;">
+                    ${event.name}
+                </div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                    ${event.type === 'tsunami' ? 'Wave Height: ' + event.waveHeight + 'm' : 'M' + event.magnitude + ' at ' + event.depth + 'km depth'}
+                </div>
+                <div style="margin-top: 12px; padding: 8px; background: var(--bg-base); border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Time since event</div>
+                    <div style="font-size: 1.2rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+                        ${formatTime(Math.floor(elapsed))}
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('eventInfo').innerHTML = infoHtml;
+    }
+    
+    function updateBuildingDamage(scenario, time) {
+        if (!processedHomes.length || !layerVisibility.damage) return;
+        
+        // Get all active events up to current time
+        const activeEvents = scenario.events.filter(e => e.time <= time);
+        
+        processedHomes.forEach((home, index) => {
+            let earthquakeDamage = 0;
+            
+            // Calculate earthquake/aftershock damage
+            activeEvents.forEach(event => {
+                if (event.type === 'earthquake' || event.type === 'aftershock') {
+                    const damage = calculateEventDamage(home, event, time);
+                    earthquakeDamage += damage;
+                }
+            });
+            
+            // Get any existing tsunami damage (persists even after water recedes)
+            const existingTsunamiDamage = tsunamiDamage[home.id] || 0;
+            
+            // Combine earthquake damage with tsunami damage
+            // Total = earthquake + tsunami (tsunami damage persists)
+            buildingDamage[home.id] = Math.min(100, earthquakeDamage + existingTsunamiDamage);
+        });
+        
+        // Update building colors
+        updateBuildingVisualization();
+    }
+    
+    function calculateEventDamage(home, event, currentTime) {
+        if (currentTime < event.time) return 0;
+        
+        const elapsed = currentTime - event.time;
+        
+        // Distance from epicenter (in meters)
+        const distanceMeters = getDistance(home.lat, home.lng, event.location[0], event.location[1]);
+        const distanceKm = distanceMeters / 1000;
+        
+        // Calculate shockwave radius at current time
+        // Shockwave expands over 60 seconds to maxRadius
+        const shockwaveDuration = 60; // seconds
+        const maxRadius = event.magnitude * 15000; // meters, matches showShockwave
+        const currentShockwaveRadius = (Math.min(elapsed, shockwaveDuration) / shockwaveDuration) * maxRadius;
+        
+        // Only apply damage if shockwave has reached this building
+        if (distanceMeters > currentShockwaveRadius) {
+            return 0; // Shockwave hasn't reached this building yet
+        }
+        
+        // Calculate how long ago the shockwave passed this building
+        const timeToReachBuilding = (distanceMeters / maxRadius) * shockwaveDuration;
+        const timeSinceShockwavePassed = elapsed - timeToReachBuilding;
+        
+        // Damage ramps up quickly when shockwave hits, then stabilizes
+        // This creates a more dramatic effect as the wave passes
+        const damageRampFactor = Math.min(1, timeSinceShockwavePassed / 5); // Full damage in 5 seconds after wave hits
+        
+        // Base damage based on magnitude and distance (inverse square law)
+        const magnitudeEffect = Math.pow(10, (event.magnitude - 5) * 0.5);
+        const distanceEffect = 1 / Math.pow(1 + distanceKm / 10, 2);
+        let baseDamage = magnitudeEffect * distanceEffect * 30;
+        
+        // Building vulnerability factors
+        const vulnerability = computeBaseHomeRisk(home, marinaRisk).baseRisk / 100;
+        
+        // Material factor
+        let materialMultiplier = 1;
+        if (home.material === 'brick') materialMultiplier = 1.5;
+        else if (home.material === 'wood') materialMultiplier = 1.2;
+        else if (home.material === 'concrete') materialMultiplier = 0.8;
+        
+        // Age factor
+        let ageMultiplier = 1;
+        if (home.yearBuilt < 1940) ageMultiplier = 1.6;
+        else if (home.yearBuilt < 1980) ageMultiplier = 1.3;
+        else if (home.yearBuilt >= 2000) ageMultiplier = 0.7;
+        
+        // Retrofit bonus
+        const retrofitMultiplier = home.retrofitted ? 0.6 : 1;
+        
+        // Soft story penalty
+        const softStoryMultiplier = home.softStory ? 1.4 : 1;
+        
+        // Liquefaction zone (Marina is high liquefaction)
+        const liquefactionMultiplier = 1.3;
+        
+        // Calculate final damage with ramp factor
+        const damage = baseDamage * vulnerability * materialMultiplier * ageMultiplier * 
+                       retrofitMultiplier * softStoryMultiplier * liquefactionMultiplier * damageRampFactor;
+        
+        return Math.max(0, damage);
+    }
+    
+    function getDamageColor(damage) {
+        if (damage < 10) return '#10b981'; // Intact - green
+        if (damage < 30) return '#f59e0b'; // Minor - yellow
+        if (damage < 60) return '#f97316'; // Moderate - orange
+        if (damage < 90) return '#ef4444'; // Severe - red
+        return '#1f2937'; // Collapsed - dark
+    }
+    
+    function getDamageCategory(damage) {
+        if (damage < 10) return 'intact';
+        if (damage < 30) return 'minor';
+        if (damage < 60) return 'moderate';
+        if (damage < 90) return 'severe';
+        return 'collapsed';
+    }
+    
+    function updateBuildingVisualization() {
+        if (!buildingsLayer) return;
+        
+        buildingsLayer.eachLayer(layer => {
+            const home = layer.feature.properties;
+            const damage = buildingDamage[home.id] || 0;
+            const color = getDamageColor(damage);
+            
+            layer.setStyle({
+                fillColor: color,
+                fillOpacity: 0.8,
+                color: damage >= 90 ? '#6b7280' : '#fff',
+                weight: damage >= 90 ? 2 : 0.5
+            });
+        });
+    }
+    
+    function resetBuildingColors() {
+        if (!buildingsLayer) return;
+        
+        buildingsLayer.eachLayer(layer => {
+            const home = layer.feature.properties;
+            const risk = computeBaseHomeRisk(home, marinaRisk).baseRisk;
+            layer.setStyle({
+                fillColor: getRiskColor(risk),
+                fillOpacity: 0.7,
+                color: '#fff',
+                weight: 0.5,
+                opacity: 0.8
+            });
+        });
+    }
+    
+    function updateDamageStats() {
+        const counts = { intact: 0, minor: 0, moderate: 0, severe: 0, collapsed: 0 };
+        
+        processedHomes.forEach(home => {
+            const damage = buildingDamage[home.id] || 0;
+            counts[getDamageCategory(damage)]++;
+        });
+        
+        document.getElementById('statIntact').textContent = counts.intact;
+        document.getElementById('statMinor').textContent = counts.minor;
+        document.getElementById('statModerate').textContent = counts.moderate;
+        document.getElementById('statSevere').textContent = counts.severe;
+        document.getElementById('statCollapsed').textContent = counts.collapsed;
+        document.getElementById('statTotal').textContent = processedHomes.length;
+    }
+    
+    function clearShockwaves() {
+        shockwaveLayers.forEach(sw => {
+            if (map.hasLayer(sw.layer)) {
+                map.removeLayer(sw.layer);
+            }
+        });
+        shockwaveLayers = [];
+        
+        if (epicenterMarker && map.hasLayer(epicenterMarker)) {
+            map.removeLayer(epicenterMarker);
+            epicenterMarker = null;
+        }
+    }
+    
+    function showAlert(alert) {
+        activeAlerts.push(alert);
+        
+        const alertPanel = document.getElementById('alertPanel');
+        alertPanel.classList.add('visible');
+        
+        const alertId = 'alert-' + Date.now();
+        const alertHtml = `
+            <div class="alert-card ${alert.type}" id="${alertId}">
+                <button class="alert-dismiss" onclick="dismissAlert('${alertId}')">×</button>
+                <div class="alert-header">
+                    <span class="alert-icon">${alert.type === 'critical' ? '🔴' : alert.type === 'warning' ? '🟠' : alert.type === 'advisory' ? '🟡' : '🔵'}</span>
+                    <span class="alert-title">${alert.title}</span>
+                </div>
+                <div class="alert-body">${alert.body}</div>
+                <div class="alert-meta">T+${formatTime(alert.time)}</div>
+            </div>
+        `;
+        
+        alertPanel.insertAdjacentHTML('afterbegin', alertHtml);
+        addEventLog(`🚨 ${alert.title}`, alert.type);
+        
+        // Auto-dismiss after duration
+        if (alert.duration) {
+            setTimeout(() => dismissAlert(alertId), alert.duration * 100); // Scaled with playback
+        }
+    }
+    
+    function dismissAlert(alertId) {
+        const alertEl = document.getElementById(alertId);
+        if (alertEl) {
+            alertEl.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => alertEl.remove(), 300);
+        }
+        
+        if (document.querySelectorAll('.alert-card').length <= 1) {
+            document.getElementById('alertPanel').classList.remove('visible');
+        }
+    }
+    
+    function clearAlerts() {
+        activeAlerts = [];
+        document.getElementById('alertPanel').innerHTML = '';
+        document.getElementById('alertPanel').classList.remove('visible');
+    }
+    
+    function addEventLog(message, type = 'info') {
+        const now = formatTime(Math.floor(simulationTime));
+        const entry = { time: now, message, type };
+        eventLogEntries.unshift(entry);
+        
+        // Keep only last 20 entries
+        if (eventLogEntries.length > 20) eventLogEntries.pop();
+        
+        const logHtml = eventLogEntries.map(e => `
+            <div style="padding: 8px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.8rem;">
+                <span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-right: 8px;">${e.time}</span>
+                <span style="color: ${e.type === 'critical' ? '#ef4444' : e.type === 'warning' ? '#f97316' : 'var(--text-secondary)'};">${e.message}</span>
+            </div>
+        `).join('');
+        
+        document.getElementById('eventLog').innerHTML = logHtml;
+    }
+    
+    function toggleLayer(layerName) {
+        layerVisibility[layerName] = !layerVisibility[layerName];
+        
+        // Update checkbox UI
+        const layerItem = document.querySelector(`[data-layer="${layerName}"]`);
+        layerItem.classList.toggle('active', layerVisibility[layerName]);
+        layerItem.querySelector('.layer-checkbox').textContent = layerVisibility[layerName] ? '✓' : '';
+        
+        // Apply layer visibility
+        if (layerName === 'shockwave' && !layerVisibility.shockwave) {
+            clearShockwaves();
+        }
+        if (layerName === 'epicenter' && !layerVisibility.epicenter && epicenterMarker) {
+            map.removeLayer(epicenterMarker);
+            epicenterMarker = null;
+        }
+        if (layerName === 'damage') {
+            if (layerVisibility.damage) {
+                updateBuildingVisualization();
+            } else {
+                resetBuildingColors();
+            }
+        }
+    }
+    
+    function updateTimelineUI() {
+        const percentage = (simulationTime / totalDuration) * 100;
+        document.getElementById('timelineProgress').style.width = percentage + '%';
+        document.getElementById('currentTime').textContent = 'T+' + formatTime(Math.floor(simulationTime));
+    }
+    
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // ============================================
+    // PHASE 2: EVACUATION ROUTES
+    // ============================================
+    
+    function initEvacuationRoutes() {
+        if (evacuationLayer) {
+            map.removeLayer(evacuationLayer);
+        }
+        
+        evacuationLayer = L.layerGroup();
+        
+        // Create route polylines
+        evacuationRoutes.forEach(route => {
+            const latLngs = route.coordinates.map(c => [c[1], c[0]]);
+            const routeLine = L.polyline(latLngs, {
+                color: '#10b981',
+                weight: route.type === 'primary' ? 5 : 3,
+                opacity: 0.8,
+                dashArray: route.type === 'secondary' ? '10, 5' : null,
+                className: 'evacuation-route'
+            });
+            
+            routeLine.routeId = route.id;
+            routeLine.bindPopup(`
+                <div style="min-width: 150px;">
+                    <div style="font-weight: 700; margin-bottom: 4px;">🚶 ${route.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        <div>Distance: ${route.distance}</div>
+                        <div>Terrain: ${route.elevation}</div>
+                        <div>Status: <span style="color: ${route.status === 'clear' ? '#10b981' : '#ef4444'};">${route.status}</span></div>
+                    </div>
+                </div>
+            `);
+            
+            evacuationLayer.addLayer(routeLine);
+            routeStatuses[route.id] = 'clear';
+        });
+        
+        // Add assembly point markers
+        assemblyPoints.forEach(ap => {
+            const icon = L.divIcon({
+                html: `<div style="
+                    background: #10b981;
+                    color: white;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1rem;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                ">🏁</div>`,
+                className: '',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+            
+            const marker = L.marker([ap.location[1], ap.location[0]], { icon });
+            marker.bindPopup(`
+                <div style="min-width: 180px;">
+                    <div style="font-weight: 700; margin-bottom: 6px;">🏁 ${ap.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        <div>Capacity: ${ap.capacity.toLocaleString()} people</div>
+                        <div>Elevation: ${ap.elevation}m</div>
+                        <div>Facilities: ${ap.facilities.join(', ')}</div>
+                    </div>
+                </div>
+            `);
+            
+            evacuationLayer.addLayer(marker);
+            assemblyMarkers.push(marker);
+        });
+        
+        if (layerVisibility.evacuation) {
+            evacuationLayer.addTo(map);
+        }
+    }
+    
+    function updateRouteStatuses(time) {
+        if (!evacuationLayer) return;
+        
+        let clearCount = 0;
+        let blockedCount = 0;
+        
+        evacuationRoutes.forEach((route, index) => {
+            // Check if any collapsed buildings are near this route
+            let isBlocked = false;
+            
+            Object.entries(buildingDamage).forEach(([id, damage]) => {
+                if (damage >= 90) {
+                    const home = processedHomes.find(h => h.id === id);
+                    if (home) {
+                        // Check distance to route
+                        route.coordinates.forEach(coord => {
+                            const dist = getDistance(home.lat, home.lng, coord[1], coord[0]);
+                            if (dist < 40) { // Within 40m of route
+                                isBlocked = true;
+                            }
+                        });
+                    }
+                }
+            });
+            
+            routeStatuses[route.id] = isBlocked ? 'blocked' : 'clear';
+            if (isBlocked) blockedCount++;
+            else clearCount++;
+            
+            // Update route line color
+            evacuationLayer.eachLayer(layer => {
+                if (layer.routeId === route.id) {
+                    layer.setStyle({
+                        color: isBlocked ? '#ef4444' : '#10b981',
+                        dashArray: isBlocked ? '5, 5' : (route.type === 'secondary' ? '10, 5' : null)
+                    });
+                }
+            });
+        });
+        
+        // Update UI
+        document.getElementById('routesClear').textContent = clearCount;
+        document.getElementById('routesBlocked').textContent = blockedCount;
+        
+        // Update route list
+        const listItems = document.querySelectorAll('.route-status-item');
+        listItems.forEach((item, i) => {
+            if (evacuationRoutes[i]) {
+                const indicator = item.querySelector('.route-status-indicator');
+                indicator.className = 'route-status-indicator ' + (routeStatuses[evacuationRoutes[i].id] || 'clear');
+            }
+        });
+    }
+
+    // ============================================
+    // PHASE 2: FIRST RESPONDER LAYER
+    // ============================================
+    
+    function initFirstResponderLayer() {
+        // Clear existing
+        facilityMarkers.forEach(m => {
+            if (map.hasLayer(m)) map.removeLayer(m);
+        });
+        facilityMarkers = [];
+        
+        // Fire stations
+        emergencyFacilities.fireStations.forEach(station => {
+            const icon = L.divIcon({
+                html: `<div class="facility-marker facility-fire-station facility-operational">🚒</div>`,
+                className: '',
+                iconSize: [36, 36],
+                iconAnchor: [18, 18]
+            });
+            
+            const marker = L.marker([station.location[1], station.location[0]], { icon });
+            marker.facilityId = station.id;
+            marker.facilityType = 'fireStation';
+            marker.bindPopup(`
+                <div style="min-width: 160px;">
+                    <div style="font-weight: 700; margin-bottom: 4px;">🚒 ${station.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        <div>Personnel: ${station.personnel}</div>
+                        <div>Status: <span style="color: #10b981;">Operational</span></div>
+                    </div>
+                </div>
+            `);
+            
+            facilityMarkers.push(marker);
+            facilityStatuses[station.id] = 'operational';
+        });
+        
+        // Hospitals
+        emergencyFacilities.hospitals.forEach(hospital => {
+            const icon = L.divIcon({
+                html: `<div class="facility-marker facility-hospital facility-operational">🏥</div>`,
+                className: '',
+                iconSize: [36, 36],
+                iconAnchor: [18, 18]
+            });
+            
+            const marker = L.marker([hospital.location[1], hospital.location[0]], { icon });
+            marker.facilityId = hospital.id;
+            marker.facilityType = 'hospital';
+            marker.bindPopup(`
+                <div style="min-width: 160px;">
+                    <div style="font-weight: 700; margin-bottom: 4px;">🏥 ${hospital.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        <div>Capacity: ${hospital.capacity}%</div>
+                        <div>Status: <span style="color: #10b981;">Operational</span></div>
+                    </div>
+                </div>
+            `);
+            
+            facilityMarkers.push(marker);
+            facilityStatuses[hospital.id] = 'operational';
+        });
+        
+        // Staging areas
+        emergencyFacilities.stagingAreas.forEach(staging => {
+            const icon = L.divIcon({
+                html: `<div class="facility-marker facility-staging">🚧</div>`,
+                className: '',
+                iconSize: [36, 36],
+                iconAnchor: [18, 18]
+            });
+            
+            const marker = L.marker([staging.location[1], staging.location[0]], { icon });
+            marker.facilityId = staging.id;
+            marker.facilityType = 'staging';
+            marker.bindPopup(`
+                <div style="min-width: 140px;">
+                    <div style="font-weight: 700; margin-bottom: 4px;">🚧 ${staging.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">
+                        <div>Status: Standby</div>
+                    </div>
+                </div>
+            `);
+            
+            facilityMarkers.push(marker);
+        });
+        
+        if (layerVisibility.responders) {
+            facilityMarkers.forEach(m => m.addTo(map));
+        }
+    }
+    
+    function updateFacilityStatuses(time) {
+        let operationalStations = 0;
+        let operationalHospitals = 0;
+        let statusMessages = [];
+        
+        // Check fire stations
+        emergencyFacilities.fireStations.forEach(station => {
+            let damaged = false;
+            
+            Object.entries(buildingDamage).forEach(([id, damage]) => {
+                if (damage >= 70) {
+                    const home = processedHomes.find(h => h.id === id);
+                    if (home) {
+                        const dist = getDistance(station.location[1], station.location[0], home.lat, home.lng);
+                        if (dist < 100) {
+                            damaged = true;
+                        }
+                    }
+                }
+            });
+            
+            facilityStatuses[station.id] = damaged ? 'damaged' : 'operational';
+            if (!damaged) operationalStations++;
+            else statusMessages.push(`⚠️ ${station.name} - Reduced capacity`);
+            
+            // Update marker style
+            facilityMarkers.forEach(m => {
+                if (m.facilityId === station.id) {
+                    m.getElement()?.querySelector('.facility-marker')?.classList.toggle('facility-damaged', damaged);
+                }
+            });
+        });
+        
+        // Check hospitals (usually farther away, less likely to be damaged)
+        emergencyFacilities.hospitals.forEach(hospital => {
+            operationalHospitals++;
+            facilityStatuses[hospital.id] = 'operational';
+        });
+        
+        // Update UI
+        document.getElementById('stationsOperational').textContent = operationalStations;
+        document.getElementById('hospitalsOperational').textContent = operationalHospitals;
+        
+        const facilityList = document.getElementById('facilityStatusList');
+        if (statusMessages.length > 0) {
+            facilityList.innerHTML = statusMessages.map(m => 
+                `<div style="padding: 4px 0; color: var(--risk-medium);">${m}</div>`
+            ).join('');
+        } else {
+            facilityList.innerHTML = '<span style="color: var(--risk-low);">✓ All facilities operational</span>';
+        }
+    }
+
+    // ============================================
+    // PHASE 2: HAZARD ZONES
+    // ============================================
+    
+    function updateHazardZones(time) {
+        // Clear existing hazards
+        hazardLayers.forEach(layer => {
+            if (map.hasLayer(layer)) map.removeLayer(layer);
+        });
+        hazardLayers = [];
+        activeHazards = [];
+        
+        if (!layerVisibility.hazards) return;
+        
+        // Limit hazards to reduce clutter - only show significant ones
+        let gasCount = 0;
+        let fireCount = 0;
+        const maxGasHazards = 5;  // Limit gas hazards
+        const maxFireHazards = 8; // Limit fire hazards
+        
+        // Sort buildings by damage to prioritize worst ones
+        const sortedDamage = Object.entries(buildingDamage)
+            .filter(([id, damage]) => damage >= 60)
+            .sort((a, b) => b[1] - a[1]);
+        
+        sortedDamage.forEach(([id, damage]) => {
+            const home = processedHomes.find(h => h.id === id);
+            if (!home) return;
+            
+            const seed = parseInt(id.replace(/\D/g, '')) || 0;
+            const pseudoRandom = Math.abs(Math.sin(seed * 9999) * 10000) % 1;
+            
+            // Gas leak from severely damaged buildings (reduced chance, limited count)
+            if (damage >= 60 && damage < 90 && pseudoRandom < 0.15 && gasCount < maxGasHazards) {
+                // Use small markers instead of circles
+                const gasMarker = L.circleMarker([home.lat, home.lng], {
+                    radius: 8,
+                    fillColor: '#eab308',
+                    color: '#fbbf24',
+                    weight: 2,
+                    fillOpacity: 0.7
+                });
+                gasMarker.bindPopup(`
+                    <div style="min-width: 100px;">
+                        <div style="font-weight: 700; color: #eab308;">⚠️ Gas Leak</div>
+                        <div style="font-size: 0.85rem;">Avoid open flames</div>
+                    </div>
+                `);
+                hazardLayers.push(gasMarker);
+                activeHazards.push({ type: 'gas', location: [home.lat, home.lng] });
+                gasCount++;
+            }
+            
+            // Fire from collapsed buildings (reduced, limited count)
+            if (damage >= 90 && fireCount < maxFireHazards) {
+                const fireChance = 0.1 + (time / 900) * 0.2; // Lower chance
+                if (pseudoRandom < fireChance) {
+                    // Use smaller, less intrusive fire markers
+                    const fireMarker = L.circleMarker([home.lat, home.lng], {
+                        radius: 10,
+                        fillColor: '#f97316',
+                        color: '#ef4444',
+                        weight: 2,
+                        fillOpacity: 0.8
+                    });
+                    fireMarker.bindPopup(`
+                        <div style="min-width: 100px;">
+                            <div style="font-weight: 700; color: #f97316;">🔥 Active Fire</div>
+                            <div style="font-size: 0.85rem;">Structure fire</div>
+                        </div>
+                    `);
+                    hazardLayers.push(fireMarker);
+                    activeHazards.push({ type: 'fire', location: [home.lat, home.lng] });
+                    fireCount++;
+                }
+            }
+        });
+        
+        // Add hazards to map
+        hazardLayers.forEach(layer => layer.addTo(map));
+        
+        // Update hazard count
+        document.getElementById('activeHazards').textContent = activeHazards.length;
+    }
+
+    // ============================================
+    // PHASE 2: UNIFIED TSUNAMI ANIMATION
+    // ============================================
+    
+    // Tsunami geometry constants
+    const TSUNAMI_CONFIG = {
+        oceanStart: 37.820,     // Where wave starts in the bay
+        coastline: 37.810,      // Northern edge of Marina
+        maxInland: 37.798,      // How far south water reaches
+        westEdge: -122.452,
+        eastEdge: -122.418,
+        // Timing (seconds after tsunami warning)
+        approachDuration: 810,  // Time for wave to reach coast (matches tsunami_arrival)
+        advanceDuration: 300,   // Time for flood to spread inland (longer = slower on land)
+        peakDuration: 60,       // Time at maximum flooding
+        recedeDuration: 180     // Time for water to recede
+    };
+    
+    function updateTsunamiVisualization(scenario, time) {
+        const tsunamiEvent = scenario.events.find(e => e.type === 'tsunami');
+        const tsunamiArrival = scenario.events.find(e => e.type === 'tsunami_arrival');
+        
+        if (!tsunamiEvent) {
+            hideTsunamiBanner();
+            return;
+        }
+        
+        const elapsedSinceWarning = time - tsunamiEvent.time;
+        
+        if (elapsedSinceWarning < 0) {
+            hideTsunamiBanner();
+            clearTsunamiVisuals();
+            return;
+        }
+        
+        if (!layerVisibility.tsunami) {
+            // Still update banners even if layer hidden
+            updateTsunamiBannerState(tsunamiArrival, time, elapsedSinceWarning);
+            return;
+        }
+        
+        // Calculate tsunami state
+        const arrivalTime = tsunamiArrival ? tsunamiArrival.time : tsunamiEvent.time + TSUNAMI_CONFIG.approachDuration;
+        const elapsedSinceArrival = time - arrivalTime;
+        
+        // Update banner
+        updateTsunamiBannerState(tsunamiArrival, time, elapsedSinceWarning);
+        
+        // Render unified tsunami visualization
+        renderTsunamiState(elapsedSinceWarning, elapsedSinceArrival, arrivalTime - tsunamiEvent.time);
+    }
+    
+    function updateTsunamiBannerState(tsunamiArrival, time, elapsedSinceWarning) {
+        if (!tsunamiArrival) return;
+        
+        const eta = tsunamiArrival.time - time;
+        const elapsedSinceArrival = time - tsunamiArrival.time;
+        
+        if (eta > 0) {
+            showTsunamiBanner(eta);
+        } else if (elapsedSinceArrival < TSUNAMI_CONFIG.advanceDuration + TSUNAMI_CONFIG.peakDuration) {
+            updateTsunamiBannerArrived();
+        } else if (elapsedSinceArrival < TSUNAMI_CONFIG.advanceDuration + TSUNAMI_CONFIG.peakDuration + TSUNAMI_CONFIG.recedeDuration) {
+            updateTsunamiBannerReceding();
+        } else {
+            updateTsunamiBannerAllClear();
+        }
+    }
+    
+    // Easing functions for realistic wave physics
+    function easeOutCubic(t) {
+        // Starts fast, slows down - like water losing energy as it moves inland
+        return 1 - Math.pow(1 - t, 3);
+    }
+    
+    function easeInCubic(t) {
+        // Starts slow, speeds up - like water gaining momentum as it recedes
+        return Math.pow(t, 3);
+    }
+    
+    function easeOutQuad(t) {
+        return 1 - Math.pow(1 - t, 2);
+    }
+    
+    function renderTsunamiState(elapsedSinceWarning, elapsedSinceArrival, approachDuration) {
+        // Clear previous frame
+        clearTsunamiVisuals();
+        
+        const cfg = TSUNAMI_CONFIG;
+        const tsunamiGroup = L.layerGroup();
+        
+        // Calculate wave front position (the leading edge of the wave/water)
+        let waveFrontLat;
+        let waterBehindWave = false;
+        let phase = 'approaching';
+        let floodProgress = 0;
+        
+        if (elapsedSinceArrival < 0) {
+            // APPROACHING: Wave moving from ocean toward coast at CONSTANT speed
+            phase = 'approaching';
+            const approachProgress = Math.max(0, elapsedSinceWarning / approachDuration);
+            // Pure linear - constant speed in open water
+            waveFrontLat = cfg.oceanStart - (cfg.oceanStart - cfg.coastline) * approachProgress;
+            waterBehindWave = false;
+        } else if (elapsedSinceArrival < cfg.advanceDuration) {
+            // ADVANCING: Wave hit coast, water spreading inland
+            // Wave gradually SLOWS DOWN due to friction with land
+            phase = 'advancing';
+            const t = elapsedSinceArrival / cfg.advanceDuration;
+            // Use quadratic ease-out but gentler: starts at similar speed, gradually slows
+            // Formula: 2t - t^2 = t(2-t) gives smooth deceleration
+            const advanceProgress = t * (2 - t);
+            floodProgress = advanceProgress;
+            const maxPenetration = cfg.coastline - cfg.maxInland;
+            waveFrontLat = cfg.coastline - (maxPenetration * advanceProgress);
+            waterBehindWave = true;
+        } else if (elapsedSinceArrival < cfg.advanceDuration + cfg.peakDuration) {
+            // PEAK: Maximum flooding - water has stopped advancing
+            phase = 'peak';
+            floodProgress = 1;
+            waveFrontLat = cfg.maxInland;
+            waterBehindWave = true;
+        } else if (elapsedSinceArrival < cfg.advanceDuration + cfg.peakDuration + cfg.recedeDuration) {
+            // RECEDING: Water pulling back toward ocean
+            // Starts slow as water begins to drain, accelerates due to gravity
+            phase = 'receding';
+            const linearProgress = (elapsedSinceArrival - cfg.advanceDuration - cfg.peakDuration) / cfg.recedeDuration;
+            // Use ease-in-cubic: slow start, faster as gravity pulls water back
+            const recedeProgress = easeInCubic(linearProgress);
+            floodProgress = 1 - recedeProgress;
+            const maxPenetration = cfg.coastline - cfg.maxInland;
+            waveFrontLat = cfg.maxInland + (maxPenetration * recedeProgress);
+            waterBehindWave = true;
+        } else {
+            // ALL CLEAR: Water has receded
+            phase = 'clear';
+            return;
+        }
+        
+        // Draw water body (flooded area behind wave front)
+        if (waterBehindWave && waveFrontLat < cfg.coastline) {
+            const waterOpacity = phase === 'receding' 
+                ? 0.12 + floodProgress * 0.08 
+                : 0.12 + floodProgress * 0.13;
+            
+            const waterPolygon = L.polygon([
+                [cfg.coastline + 0.002, cfg.westEdge - 0.002], // Extend slightly into bay
+                [cfg.coastline + 0.002, cfg.eastEdge + 0.002],
+                [waveFrontLat, cfg.eastEdge],
+                [waveFrontLat, cfg.westEdge]
+            ], {
+                fillColor: phase === 'receding' ? '#60a5fa' : '#3b82f6',
+                fillOpacity: waterOpacity,
+                stroke: false,
+                interactive: false
+            });
+            tsunamiGroup.addLayer(waterPolygon);
+        }
+        
+        // Draw wave front (the leading edge - always visible)
+        const wavePoints = generateWaveFrontPoints(waveFrontLat, cfg.westEdge, cfg.eastEdge, phase);
+        
+        // Main wave crest (white foam line)
+        const waveCrest = L.polyline(wavePoints.crest, {
+            color: '#ffffff',
+            weight: phase === 'approaching' ? 4 : 5,
+            opacity: 0.9,
+            lineCap: 'round'
+        });
+        tsunamiGroup.addLayer(waveCrest);
+        
+        // Secondary wave line (blue)
+        const waveSecondary = L.polyline(wavePoints.secondary, {
+            color: '#93c5fd',
+            weight: 3,
+            opacity: 0.7,
+            lineCap: 'round'
+        });
+        tsunamiGroup.addLayer(waveSecondary);
+        
+        // Tertiary wave line (darker blue, only when approaching or advancing)
+        if (phase === 'approaching' || phase === 'advancing') {
+            const waveTertiary = L.polyline(wavePoints.tertiary, {
+                color: '#3b82f6',
+                weight: 2,
+                opacity: 0.5,
+                lineCap: 'round'
+            });
+            tsunamiGroup.addLayer(waveTertiary);
+        }
+        
+        // Add to map
+        tsunamiWaveLayer = tsunamiGroup;
+        tsunamiWaveLayer.addTo(map);
+        
+        // Apply damage during advancing and peak phases
+        if (phase === 'advancing' || phase === 'peak') {
+            applyTsunamiDamageToBuildings(waveFrontLat);
+        }
+    }
+    
+    function generateWaveFrontPoints(frontLat, westLng, eastLng, phase) {
+        const numPoints = 20;
+        const crest = [];
+        const secondary = [];
+        const tertiary = [];
+        
+        // Wave amplitude varies by phase
+        const amplitude = phase === 'approaching' ? 0.0008 : 
+                         phase === 'advancing' ? 0.001 : 
+                         phase === 'receding' ? 0.0006 : 0.0004;
+        
+        // Offset between wave lines
+        const lineOffset = phase === 'approaching' ? 0.0015 : 0.001;
+        
+        for (let i = 0; i <= numPoints; i++) {
+            const t = i / numPoints;
+            const lng = westLng + (eastLng - westLng) * t;
+            
+            // Create natural wave curve
+            const wave1 = Math.sin(t * Math.PI * 2.5) * amplitude;
+            const wave2 = Math.sin(t * Math.PI * 4 + 0.5) * (amplitude * 0.3);
+            const curve = wave1 + wave2;
+            
+            crest.push([frontLat + curve, lng]);
+            secondary.push([frontLat + lineOffset + curve * 0.7, lng]);
+            tertiary.push([frontLat + lineOffset * 2 + curve * 0.4, lng]);
+        }
+        
+        return { crest, secondary, tertiary };
+    }
+    
+    function clearTsunamiVisuals() {
+        if (tsunamiWaveLayer && map.hasLayer(tsunamiWaveLayer)) {
+            map.removeLayer(tsunamiWaveLayer);
+            tsunamiWaveLayer = null;
+        }
+        if (tsunamiInundationLayer && map.hasLayer(tsunamiInundationLayer)) {
+            map.removeLayer(tsunamiInundationLayer);
+            tsunamiInundationLayer = null;
+        }
+    }
+    
+    function applyTsunamiDamageToBuildings(waterEdgeLat) {
+        // Tsunami damage is applied ONCE when a building first gets flooded
+        // Damage is stored separately and persists permanently (even after water recedes)
+        
+        const cfg = TSUNAMI_CONFIG;
+        const maxDepth = cfg.coastline - cfg.maxInland;
+        
+        let newDamageApplied = false;
+        
+        processedHomes.forEach((home, index) => {
+            // Check if building is in the current flood zone
+            const inLngBounds = home.lng >= cfg.westEdge && home.lng <= cfg.eastEdge;
+            const inFloodZone = home.lat >= waterEdgeLat && home.lat <= cfg.coastline && inLngBounds;
+            
+            // Only apply tsunami damage ONCE per building (first time flooded)
+            if (inFloodZone && !tsunamiDamagedBuildings.has(home.id)) {
+                // Calculate depth from coast (buildings closer to coast = more damage)
+                const depthFromCoast = cfg.coastline - home.lat;
+                const normalizedDepth = Math.min(1, depthFromCoast / maxDepth);
+                
+                // Vulnerability factors based on building properties
+                const ageFactor = home.yearBuilt < 1970 ? 1.3 : (home.yearBuilt < 1990 ? 1.15 : 1.0);
+                const materialFactor = home.material === 'wood' ? 1.25 : (home.material === 'brick' ? 1.1 : 1.0);
+                const retrofitFactor = home.retrofitted ? 0.75 : 1.0;
+                
+                // Seeded random for consistent damage per building
+                const seed = index * 7919 + 54321;
+                const pseudoRandom = Math.abs((Math.sin(seed) * 10000) % 1);
+                
+                // Base damage: buildings near coast (low normalizedDepth) get MORE damage
+                // normalizedDepth 0 = at coast = highest damage
+                // normalizedDepth 1 = furthest inland = lowest damage
+                const baseDamage = 40 + (1 - normalizedDepth) * 45; // 40-85 base
+                const variability = pseudoRandom * 15 - 7.5; // -7.5 to +7.5
+                
+                const calculatedTsunamiDamage = Math.max(30, baseDamage * ageFactor * materialFactor * retrofitFactor + variability);
+                
+                // Store tsunami damage separately - this persists after water recedes
+                tsunamiDamage[home.id] = calculatedTsunamiDamage;
+                
+                // Update total building damage (earthquake + tsunami)
+                const existingEarthquakeDamage = (buildingDamage[home.id] || 0) - (tsunamiDamage[home.id] || 0);
+                buildingDamage[home.id] = Math.min(100, Math.max(0, existingEarthquakeDamage) + calculatedTsunamiDamage);
+                
+                // Mark as tsunami-damaged - will never be damaged by tsunami again
+                tsunamiDamagedBuildings.add(home.id);
+                newDamageApplied = true;
+            }
+        });
+        
+        // Only update visualization if new damage was applied
+        if (newDamageApplied) {
+            updateBuildingVisualization();
+        }
+    }
+    
+    // ============================================
+    // EMERGENCY GUIDANCE
+    // ============================================
+    
+    function updateEmergencyGuidance(scenario, time) {
+        const civilianEl = document.getElementById('civilianGuidance');
+        const responderEl = document.getElementById('responderGuidance');
+        
+        if (!civilianEl || !responderEl) return;
+        
+        // Check for active events
+        const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
+        const tsunamiEvent = scenario.events.find(e => e.type === 'tsunami');
+        const tsunamiArrival = scenario.events.find(e => e.type === 'tsunami_arrival');
+        const earthquakeEvent = scenario.events.find(e => e.type === 'earthquake' && e.time <= time);
+        
+        // Count damage levels
+        const severeCount = Object.values(buildingDamage).filter(d => d >= 60 && d < 90).length;
+        const collapsedCount = Object.values(buildingDamage).filter(d => d >= 90).length;
+        
+        let civilianText = '';
+        let responderText = '';
+        
+        // Tsunami phases
+        if (hasTsunami && tsunamiArrival) {
+            const arrivalTime = tsunamiArrival.time;
+            const tsunamiElapsed = time - (tsunamiEvent?.time || 0);
+            
+            if (time < tsunamiEvent.time) {
+                // Before tsunami warning
+                civilianText = earthquakeEvent ? 
+                    '• Drop, Cover, Hold On<br>• Move away from windows<br>• Check for injuries' :
+                    '• Stay alert for updates<br>• Know your evacuation route';
+                responderText = earthquakeEvent ?
+                    '• Assess structural damage<br>• Check for trapped victims<br>• Monitor for aftershocks' :
+                    '• Standby for deployment<br>• Review evacuation protocols';
+            } else if (time < arrivalTime) {
+                // Tsunami warning active
+                const eta = arrivalTime - time;
+                civilianText = `<span style="color: var(--risk-medium);">⚠️ EVACUATE NOW</span><br>• Wave arriving in ${formatTime(Math.floor(eta))}<br>• Move inland or to high ground<br>• Follow marked evacuation routes<br>• Do NOT return for belongings`;
+                responderText = `• Begin evacuation assistance<br>• Clear coastal areas<br>• Set up inland staging<br>• Prepare for water rescue`;
+            } else {
+                // After tsunami arrival
+                const postArrival = time - arrivalTime;
+                if (postArrival < 240) {
+                    // Active flooding
+                    civilianText = `<span style="color: var(--risk-extreme);">🔴 STAY ON HIGH GROUND</span><br>• Do NOT enter floodwaters<br>• Avoid damaged structures<br>• Wait for all-clear signal`;
+                    responderText = `• Do NOT enter flood zone<br>• Await water recession<br>• Prepare water rescue teams<br>• ${collapsedCount} buildings collapsed`;
+                } else if (postArrival < 360) {
+                    // Receding
+                    civilianText = `<span style="color: var(--risk-medium);">⚠️ WATERS RECEDING</span><br>• Remain on high ground<br>• Additional waves possible<br>• Watch for debris in water`;
+                    responderText = `• Begin cautious assessment<br>• Mark hazardous areas<br>• Prepare search & rescue<br>• ${collapsedCount} collapsed, ${severeCount} severe`;
+                } else {
+                    // All clear
+                    civilianText = `<span style="color: var(--risk-low);">✅ Tsunami threat passed</span><br>• Exercise caution in damaged areas<br>• Report trapped persons to 911<br>• Avoid damaged buildings`;
+                    responderText = `• Begin search & rescue ops<br>• Assess infrastructure damage<br>• Set up aid stations<br>• ${collapsedCount} collapsed, ${severeCount} severe damage`;
+                }
+            }
+        } else if (earthquakeEvent) {
+            // Earthquake only (no tsunami)
+            const elapsed = time - earthquakeEvent.time;
+            
+            if (elapsed < 60) {
+                civilianText = '• Stay where you are if safe<br>• Move away from windows<br>• Watch for falling debris<br>• Expect aftershocks';
+                responderText = '• Deploy to staging areas<br>• Assess road conditions<br>• Prepare for rescue calls';
+            } else if (elapsed < 300) {
+                civilianText = `• Check yourself for injuries<br>• Check on neighbors<br>• Avoid damaged structures<br>• Be ready for aftershocks`;
+                responderText = `• Respond to collapse reports<br>• Check gas/electric hazards<br>• ${collapsedCount} buildings collapsed`;
+            } else {
+                civilianText = `• Report emergencies to 911<br>• Stay away from damage areas<br>• Document property damage<br>• Check on vulnerable neighbors`;
+                responderText = `• Continue search & rescue<br>• Secure hazard zones<br>• Coordinate with utilities<br>• ${severeCount + collapsedCount} buildings need attention`;
+            }
+        } else {
+            civilianText = 'Awaiting simulation start';
+            responderText = 'Awaiting simulation start';
+        }
+        
+        civilianEl.innerHTML = civilianText;
+        responderEl.innerHTML = responderText;
+    }
+    
+    // ============================================
+    // POST-DISASTER SUMMARY
+    // ============================================
+    
+    function checkForSimulationEnd(scenario, time) {
+        if (summaryShown) return;
+        
+        const totalDuration = scenario.duration || 1500;
+        const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
+        
+        // Determine end condition based on scenario type
+        let isComplete = false;
+        
+        if (hasTsunami) {
+            const tsunamiArrival = scenario.events.find(e => e.type === 'tsunami_arrival');
+            if (tsunamiArrival) {
+                const TSUNAMI_CONFIG_LOCAL = {
+                    advanceDuration: 300,
+                    peakDuration: 60,
+                    recedeDuration: 180
+                };
+                const elapsedSinceArrival = time - tsunamiArrival.time;
+                const totalTsunamiDuration = TSUNAMI_CONFIG_LOCAL.advanceDuration + 
+                                             TSUNAMI_CONFIG_LOCAL.peakDuration + 
+                                             TSUNAMI_CONFIG_LOCAL.recedeDuration;
+                
+                // Show summary when tsunami has fully receded
+                if (elapsedSinceArrival >= totalTsunamiDuration + 30) { // 30s buffer after all-clear
+                    isComplete = true;
+                }
+            }
+        } else {
+            // For non-tsunami scenarios, show summary at 90% through
+            if (time >= totalDuration * 0.9) {
+                isComplete = true;
+            }
+        }
+        
+        if (isComplete && !summaryShown) {
+            pauseSimulation(); // Pause when summary appears
+            showPostDisasterSummary(scenario);
+            summaryShown = true;
+        }
+    }
+    
+    function showPostDisasterSummary(scenario) {
+        // Calculate statistics
+        const collapsed = Object.values(buildingDamage).filter(d => d >= 90).length;
+        const severe = Object.values(buildingDamage).filter(d => d >= 60 && d < 90).length;
+        const moderate = Object.values(buildingDamage).filter(d => d >= 30 && d < 60).length;
+        const minor = Object.values(buildingDamage).filter(d => d >= 10 && d < 30).length;
+        const intact = Object.values(buildingDamage).filter(d => d < 10).length;
+        const totalBuildings = processedHomes.length;
+        const tsunamiDamagedCount = tsunamiDamagedBuildings.size;
+        
+        // Update stats with response metrics
+        document.getElementById('summaryCollapsed').textContent = collapsed;
+        document.getElementById('summarySevere').textContent = severe;
+        document.getElementById('summaryModerate').textContent = outcomeMetrics.livesSaved;
+        document.getElementById('summaryIntact').textContent = `${outcomeMetrics.decisionsCorrect}/${outcomeMetrics.decisionsTotal}`;
+        
+        // Update labels for new metrics
+        document.querySelector('#summaryModal .summary-stat:nth-child(3) .summary-stat-label').textContent = 'Lives Saved';
+        document.querySelector('#summaryModal .summary-stat:nth-child(4) .summary-stat-label').textContent = 'Optimal Decisions';
+        
+        // Update header
+        const decisionScore = outcomeMetrics.decisionsTotal > 0 
+            ? Math.round((outcomeMetrics.decisionsCorrect / outcomeMetrics.decisionsTotal) * 100) 
+            : 0;
+        document.getElementById('summaryScenario').textContent = `${scenario.name} — Response Score: ${outcomeMetrics.responseScore}pts`;
+        
+        // Generate analysis including decision review
+        const positives = generatePositives(scenario, collapsed, severe, tsunamiDamagedCount, totalBuildings);
+        document.getElementById('summaryPositives').innerHTML = positives.map(p => 
+            `<li class="positive"><span class="icon">${p.icon}</span>${p.text}</li>`
+        ).join('');
+        
+        const negatives = generateNegatives(scenario, collapsed, severe, tsunamiDamagedCount, totalBuildings);
+        document.getElementById('summaryNegatives').innerHTML = negatives.map(n => 
+            `<li class="negative"><span class="icon">${n.icon}</span>${n.text}</li>`
+        ).join('');
+        
+        // Generate decision-based actions
+        const actions = generateActions(collapsed, severe, tsunamiDamagedCount > 0);
+        document.getElementById('summaryActions').innerHTML = actions.map(a => `
+            <div class="summary-action-card">
+                <h4>${a.icon} ${a.title}</h4>
+                <p>${a.description}</p>
+            </div>
+        `).join('');
+        
+        // Show modal
+        document.getElementById('summaryOverlay').classList.add('visible');
+    }
+    
+    function calculateResponseEffectiveness(collapsed, severe, total) {
+        if (total === 0) return 0;
+        const damagedPercent = ((collapsed + severe) / total) * 100;
+        // Invert so higher is better
+        return Math.max(0, 100 - damagedPercent);
+    }
+    
+    function generatePositives(scenario, collapsed, severe, tsunamiDamaged, total) {
+        const positives = [];
+        const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
+        const collapsedPercent = (collapsed / total) * 100;
+        
+        // Decision-based positives
+        const optimalDecisions = decisionHistory.filter(d => d.wasOptimal);
+        if (optimalDecisions.length > 0) {
+            positives.push({
+                icon: '✅',
+                text: `Made ${optimalDecisions.length} optimal decision${optimalDecisions.length > 1 ? 's' : ''} — ${optimalDecisions.map(d => d.option.title).join(', ')}`
+            });
+        }
+        
+        if (outcomeMetrics.livesSaved > 30) {
+            positives.push({
+                icon: '💚',
+                text: `Saved ${outcomeMetrics.livesSaved} lives through rapid response decisions`
+            });
+        }
+        
+        if (outcomeMetrics.peopleEvacuated > 200) {
+            positives.push({
+                icon: '🏃',
+                text: `Successfully evacuated ${outcomeMetrics.peopleEvacuated} people from danger zones`
+            });
+        }
+        
+        // Scenario-based positives
+        if (collapsedPercent < 15) {
+            positives.push({
+                icon: '🏗️',
+                text: `${(100 - collapsedPercent).toFixed(0)}% of buildings avoided collapse`
+            });
+        }
+        
+        if (hasTsunami && tsunamiDamaged < total * 0.5) {
+            positives.push({
+                icon: '🌊',
+                text: `Tsunami damage contained to ${tsunamiDamaged} structures`
+            });
+        }
+        
+        positives.push({
+            icon: '📍',
+            text: 'Real-time damage tracking enabled prioritized rescue operations'
+        });
+        
+        return positives.slice(0, 4); // Max 4 items
+    }
+    
+    function generateNegatives(scenario, collapsed, severe, tsunamiDamaged, total) {
+        const negatives = [];
+        const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
+        const collapsedPercent = (collapsed / total) * 100;
+        
+        // Decision-based negatives
+        const suboptimalDecisions = decisionHistory.filter(d => !d.wasOptimal);
+        if (suboptimalDecisions.length > 0) {
+            suboptimalDecisions.forEach(d => {
+                negatives.push({
+                    icon: '❌',
+                    text: `"${d.option.title}" was not optimal — consider ${scenarioDecisions[currentScenario]?.find(sd => sd.id === d.decisionId)?.options.find(o => o.id === scenarioDecisions[currentScenario]?.find(sd => sd.id === d.decisionId)?.optimalChoice)?.title || 'alternative approach'}`
+                });
+            });
+        }
+        
+        const timedOutDecisions = decisionHistory.filter(d => d.timedOut);
+        if (timedOutDecisions.length > 0) {
+            negatives.push({
+                icon: '⏱️',
+                text: `${timedOutDecisions.length} decision${timedOutDecisions.length > 1 ? 's' : ''} timed out — faster decision-making needed in crisis situations`
+            });
+        }
+        
+        if (outcomeMetrics.livesSaved < 20 && outcomeMetrics.decisionsTotal > 0) {
+            negatives.push({
+                icon: '💔',
+                text: `Only ${outcomeMetrics.livesSaved} lives saved — review deployment timing and resource allocation`
+            });
+        }
+        
+        // Scenario-based negatives
+        if (collapsedPercent > 5) {
+            negatives.push({
+                icon: '🏚️',
+                text: `${collapsed} buildings collapsed — high-risk structures need priority inspection`
+            });
+        }
+        
+        if (hasTsunami && tsunamiDamaged > 10) {
+            negatives.push({
+                icon: '🌊',
+                text: `${tsunamiDamaged} structures sustained tsunami damage`
+            });
+        }
+        
+        return negatives.slice(0, 4); // Max 4 items
+    }
+    
+    function generateActions(collapsed, severe, hadTsunami) {
+        const actions = [];
+        
+        actions.push({
+            icon: '🔍',
+            title: 'Search & Rescue Priority',
+            description: `Deploy teams to ${collapsed} collapsed structures. Check adjacent buildings for structural integrity.`
+        });
+        
+        actions.push({
+            icon: '🏥',
+            title: 'Medical Triage',
+            description: `Establish aid stations near damage clusters. Estimate ${Math.round(collapsed * 2.5)} potential casualties requiring care.`
+        });
+        
+        if (hadTsunami) {
+            actions.push({
+                icon: '💧',
+                title: 'Water Damage Assessment',
+                description: 'Document flood damage for insurance/FEMA. Check for contamination and mold risk in flooded structures.'
+            });
+        } else {
+            actions.push({
+                icon: '🔥',
+                title: 'Fire Watch',
+                description: 'Monitor for gas leaks and secondary fires. Coordinate with utilities for shut-off verification.'
+            });
+        }
+        
+        actions.push({
+            icon: '📋',
+            title: 'Damage Documentation',
+            description: `Tag ${collapsed + severe} priority buildings with safety ratings. Coordinate rapid building inspection teams.`
+        });
+        
+        return actions;
+    }
+    
+    function closeSummary() {
+        document.getElementById('summaryOverlay').classList.remove('visible');
+    }
+    
+    function closeSummaryIfBackdrop(event) {
+        if (event.target.id === 'summaryOverlay') {
+            closeSummary();
+        }
+    }
+    
+    function exportSummary() {
+        // Generate text report
+        const scenario = scenarios[currentScenario];
+        const collapsed = Object.values(buildingDamage).filter(d => d >= 90).length;
+        const severe = Object.values(buildingDamage).filter(d => d >= 60 && d < 90).length;
+        const moderate = Object.values(buildingDamage).filter(d => d >= 30 && d < 60).length;
+        const intact = Object.values(buildingDamage).filter(d => d < 30).length;
+        
+        const report = `
+POST-DISASTER SUMMARY REPORT
+============================
+Scenario: ${scenario.name}
+Date: ${new Date().toLocaleString()}
+
+DAMAGE STATISTICS
+-----------------
+Collapsed: ${collapsed}
+Severe Damage: ${severe}
+Moderate Damage: ${moderate}
+Minor/Intact: ${intact}
+Total Buildings Assessed: ${processedHomes.length}
+Tsunami-Affected: ${tsunamiDamagedBuildings.size}
+
+RECOMMENDED ACTIONS
+-------------------
+1. Deploy search & rescue to collapsed structures
+2. Establish medical triage stations
+3. Document damage for FEMA/insurance
+4. Coordinate utility shut-offs
+5. Begin rapid building inspections
+
+Report generated by Quake Risk Assessment Dashboard
+        `.trim();
+        
+        // Download as text file
+        const blob = new Blob([report], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `disaster-report-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    
+    // ============================================
+    // DECISION SYSTEM
+    // ============================================
+    
+    function checkForDecisions(scenario, time) {
+        const decisions = scenarioDecisions[currentScenario] || [];
+        
+        decisions.forEach(decision => {
+            const decisionKey = `${currentScenario}-${decision.id}`;
+            if (time >= decision.triggerTime && !triggeredDecisions.has(decisionKey) && !currentDecision) {
+                triggeredDecisions.add(decisionKey);
+                showDecision(decision);
+            }
+        });
+    }
+    
+    function showDecision(decision) {
+        currentDecision = decision;
+        pauseSimulation();
+        
+        // Populate modal
+        document.getElementById('decisionTitle').textContent = decision.title;
+        document.getElementById('decisionSituation').textContent = decision.situation;
+        
+        // Build options
+        const optionsContainer = document.getElementById('decisionOptions');
+        optionsContainer.innerHTML = decision.options.map(opt => `
+            <div class="decision-option" onclick="selectDecision('${decision.id}', '${opt.id}')">
+                <div class="decision-option-header">
+                    <span class="decision-option-icon">${opt.icon}</span>
+                    <span class="decision-option-title">${opt.title}</span>
+                </div>
+                <div class="decision-option-meta">
+                    ${opt.meta.eta ? `<span>⏱️ ETA: ${opt.meta.eta}</span>` : ''}
+                    ${opt.meta.units ? `<span>👥 ${opt.meta.units}</span>` : ''}
+                    ${opt.meta.risk ? `<span>⚠️ Risk: ${opt.meta.risk}</span>` : ''}
+                    ${opt.meta.focus ? `<span>🎯 ${opt.meta.focus}</span>` : ''}
+                </div>
+                <div class="decision-option-impact">${opt.impact}</div>
+            </div>
+        `).join('');
+        
+        // Show modal
+        document.getElementById('decisionOverlay').classList.add('visible');
+        
+        // Start timer
+        startDecisionTimer(decision.timeLimit);
+    }
+    
+    function startDecisionTimer(seconds) {
+        let remaining = seconds;
+        updateTimerDisplay(remaining);
+        
+        decisionTimerId = setInterval(() => {
+            remaining--;
+            updateTimerDisplay(remaining);
+            
+            if (remaining <= 10) {
+                document.getElementById('decisionTimer').classList.add('urgent');
+            }
+            
+            if (remaining <= 0) {
+                clearInterval(decisionTimerId);
+                // Auto-select worst option if time runs out
+                if (currentDecision) {
+                    const worstOption = currentDecision.options[currentDecision.options.length - 1];
+                    selectDecision(currentDecision.id, worstOption.id, true);
+                }
+            }
+        }, 1000);
+    }
+    
+    function updateTimerDisplay(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        document.getElementById('decisionTimer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function selectDecision(decisionId, optionId, timedOut = false) {
+        if (!currentDecision) return;
+        
+        const decision = currentDecision;
+        const option = decision.options.find(o => o.id === optionId);
+        
+        if (!option) return;
+        
+        // Clear timer
+        if (decisionTimerId) {
+            clearInterval(decisionTimerId);
+            decisionTimerId = null;
+        }
+        
+        // Record decision
+        decisionHistory.push({
+            time: simulationTime,
+            decisionId: decisionId,
+            optionId: optionId,
+            option: option,
+            wasOptimal: optionId === decision.optimalChoice,
+            timedOut: timedOut
+        });
+        
+        // Apply effects
+        applyDecisionEffects(option.effect);
+        
+        // Deploy units based on decision
+        if (option.effect.resourceCost) {
+            deployUnits(option);
+        }
+        
+        // Update metrics
+        outcomeMetrics.decisionsTotal++;
+        if (optionId === decision.optimalChoice) {
+            outcomeMetrics.decisionsCorrect++;
+        }
+        
+        // Log to event log
+        addEventLog(`Decision: ${option.title}`, timedOut ? 'warning' : 'info');
+        
+        // Hide modal
+        document.getElementById('decisionOverlay').classList.remove('visible');
+        document.getElementById('decisionTimer').classList.remove('urgent');
+        currentDecision = null;
+        
+        // Update UI
+        updateOutcomeDisplay();
+        updateResourceDisplay();
+        
+        // Resume simulation
+        setTimeout(() => {
+            playSimulation();
+        }, 500);
+    }
+    
+    function applyDecisionEffects(effect) {
+        if (effect.livesSaved) {
+            outcomeMetrics.livesSaved += effect.livesSaved;
+        }
+        if (effect.evacuated) {
+            outcomeMetrics.peopleEvacuated += effect.evacuated;
+        }
+        if (effect.buildingsCleared) {
+            outcomeMetrics.buildingsCleared += effect.buildingsCleared;
+        }
+        if (effect.score) {
+            outcomeMetrics.responseScore += effect.score;
+        }
+    }
+    
+    function deployUnits(option) {
+        const cost = option.effect.resourceCost || {};
+        
+        // Determine target locations based on damage
+        const targetLocations = getDeploymentTargets();
+        let targetIndex = 0;
+        
+        Object.entries(cost).forEach(([resource, count]) => {
+            if (resources[resource]) {
+                resources[resource].available = Math.max(0, resources[resource].available - count);
+                
+                // Add to deployed list with map positions
+                for (let i = 0; i < count; i++) {
+                    const target = targetLocations[targetIndex % targetLocations.length];
+                    const unit = {
+                        id: `${resource}-${Date.now()}-${i}`,
+                        type: resource,
+                        mission: option.title,
+                        status: 'enroute',
+                        deployedAt: simulationTime,
+                        targetLat: target.lat,
+                        targetLng: target.lng,
+                        // Start from staging area (south of Marina)
+                        currentLat: 37.792 + Math.random() * 0.002,
+                        currentLng: -122.435 + Math.random() * 0.01
+                    };
+                    deployedUnits.push(unit);
+                    
+                    // Add marker to map
+                    addUnitMarkerToMap(unit);
+                    targetIndex++;
+                }
+            }
+        });
+        
+        updateDeployedList();
+    }
+    
+    function getDeploymentTargets() {
+        // Get locations of damaged buildings as targets
+        const targets = [];
+        const collapsed = processedHomes.filter(h => (buildingDamage[h.id] || 0) >= 90);
+        const severe = processedHomes.filter(h => {
+            const d = buildingDamage[h.id] || 0;
+            return d >= 60 && d < 90;
+        });
+        
+        // Prioritize collapsed, then severe
+        collapsed.forEach(h => targets.push({ lat: h.lat, lng: h.lng, priority: 'collapsed' }));
+        severe.forEach(h => targets.push({ lat: h.lat, lng: h.lng, priority: 'severe' }));
+        
+        // If no damage yet, use general Marina locations
+        if (targets.length === 0) {
+            targets.push(
+                { lat: 37.802, lng: -122.437, priority: 'staging' },
+                { lat: 37.803, lng: -122.432, priority: 'staging' },
+                { lat: 37.801, lng: -122.440, priority: 'staging' },
+                { lat: 37.804, lng: -122.428, priority: 'staging' }
+            );
+        }
+        
+        return targets;
+    }
+    
+    function addUnitMarkerToMap(unit) {
+        const icons = {
+            ambulances: { emoji: '🚑', color: '#ef4444', label: 'Ambulance' },
+            helicopters: { emoji: '🚁', color: '#8b5cf6', label: 'Helicopter' },
+            fireUnits: { emoji: '🚒', color: '#f97316', label: 'Fire Unit' },
+            sarTeams: { emoji: '👥', color: '#3b82f6', label: 'SAR Team' }
+        };
+        
+        const iconConfig = icons[unit.type] || { emoji: '📍', color: '#6b7280', label: 'Unit' };
+        
+        const icon = L.divIcon({
+            html: `<div class="deployed-unit-marker ${unit.status}" style="
+                background: ${iconConfig.color};
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                border: 3px solid white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                transition: all 0.3s ease;
+            ">${iconConfig.emoji}</div>`,
+            className: 'unit-marker-container',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+        });
+        
+        const marker = L.marker([unit.currentLat, unit.currentLng], { icon })
+            .addTo(map)
+            .bindPopup(`
+                <div style="min-width: 120px;">
+                    <div style="font-weight: 700; color: ${iconConfig.color};">${iconConfig.emoji} ${iconConfig.label}</div>
+                    <div style="font-size: 0.85rem; margin-top: 4px;">Mission: ${unit.mission}</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">Status: <span style="color: ${unit.status === 'onscene' ? '#4ade80' : '#fbbf24'}">${unit.status}</span></div>
+                </div>
+            `);
+        
+        deployedUnitMarkers[unit.id] = marker;
+    }
+    
+    function updateDeployedList() {
+        const container = document.getElementById('deployedList');
+        
+        if (deployedUnits.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 12px; color: #64748b; font-size: 0.8rem;">
+                    No units deployed yet
+                </div>
+            `;
+            return;
+        }
+        
+        const icons = {
+            ambulances: '🚑',
+            helicopters: '🚁',
+            fireUnits: '🚒',
+            sarTeams: '👥'
+        };
+        
+        const iconColors = {
+            ambulances: '#ef4444',
+            helicopters: '#8b5cf6',
+            fireUnits: '#f97316',
+            sarTeams: '#3b82f6'
+        };
+        
+        // Update statuses and positions based on time
+        deployedUnits.forEach(unit => {
+            const elapsed = simulationTime - unit.deployedAt;
+            const oldStatus = unit.status;
+            
+            if (elapsed > 300) {
+                unit.status = 'returning';
+            } else if (elapsed > 60) {
+                unit.status = 'onscene';
+            }
+            
+            // Update marker position - animate toward target
+            if (unit.targetLat && unit.targetLng) {
+                const marker = deployedUnitMarkers[unit.id];
+                if (marker) {
+                    if (unit.status === 'enroute') {
+                        // Move toward target
+                        const progress = Math.min(1, elapsed / 60);
+                        const newLat = unit.currentLat + (unit.targetLat - unit.currentLat) * progress;
+                        const newLng = unit.currentLng + (unit.targetLng - unit.currentLng) * progress;
+                        marker.setLatLng([newLat, newLng]);
+                    } else if (unit.status === 'onscene') {
+                        // At target
+                        marker.setLatLng([unit.targetLat, unit.targetLng]);
+                    } else if (unit.status === 'returning') {
+                        // Move back toward staging
+                        const returnProgress = Math.min(1, (elapsed - 300) / 120);
+                        const stagingLat = 37.792;
+                        const stagingLng = -122.435;
+                        const newLat = unit.targetLat + (stagingLat - unit.targetLat) * returnProgress;
+                        const newLng = unit.targetLng + (stagingLng - unit.targetLng) * returnProgress;
+                        marker.setLatLng([newLat, newLng]);
+                    }
+                    
+                    // Update marker appearance if status changed
+                    if (oldStatus !== unit.status) {
+                        updateUnitMarkerAppearance(unit);
+                    }
+                }
+            }
+        });
+        
+        container.innerHTML = deployedUnits.slice(-6).map(unit => `
+            <div class="deployed-item">
+                <div class="deployed-item-info">
+                    <span>${icons[unit.type] || '📍'}</span>
+                    <span>${unit.mission.substring(0, 20)}${unit.mission.length > 20 ? '...' : ''}</span>
+                </div>
+                <span class="deployed-item-status ${unit.status}">${unit.status}</span>
+            </div>
+        `).join('');
+    }
+    
+    function updateUnitMarkerAppearance(unit) {
+        const marker = deployedUnitMarkers[unit.id];
+        if (!marker) return;
+        
+        const icons = {
+            ambulances: { emoji: '🚑', color: '#ef4444' },
+            helicopters: { emoji: '🚁', color: '#8b5cf6' },
+            fireUnits: { emoji: '🚒', color: '#f97316' },
+            sarTeams: { emoji: '👥', color: '#3b82f6' }
+        };
+        
+        const iconConfig = icons[unit.type] || { emoji: '📍', color: '#6b7280' };
+        
+        // Status-based styling
+        let borderColor = 'white';
+        let opacity = '1';
+        let pulse = '';
+        
+        if (unit.status === 'onscene') {
+            borderColor = '#4ade80';
+            pulse = 'animation: unitPulse 1s ease-in-out infinite;';
+        } else if (unit.status === 'returning') {
+            opacity = '0.6';
+            borderColor = '#94a3b8';
+        }
+        
+        const icon = L.divIcon({
+            html: `<div class="deployed-unit-marker ${unit.status}" style="
+                background: ${iconConfig.color};
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                border: 3px solid ${borderColor};
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                opacity: ${opacity};
+                ${pulse}
+            ">${iconConfig.emoji}</div>`,
+            className: 'unit-marker-container',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+        });
+        
+        marker.setIcon(icon);
+        
+        // Update popup
+        const label = {
+            ambulances: 'Ambulance',
+            helicopters: 'Helicopter',
+            fireUnits: 'Fire Unit',
+            sarTeams: 'SAR Team'
+        }[unit.type] || 'Unit';
+        
+        marker.setPopupContent(`
+            <div style="min-width: 120px;">
+                <div style="font-weight: 700; color: ${iconConfig.color};">${iconConfig.emoji} ${label}</div>
+                <div style="font-size: 0.85rem; margin-top: 4px;">Mission: ${unit.mission}</div>
+                <div style="font-size: 0.8rem; color: #64748b;">Status: <span style="color: ${unit.status === 'onscene' ? '#4ade80' : unit.status === 'returning' ? '#94a3b8' : '#fbbf24'}">${unit.status}</span></div>
+            </div>
+        `);
+    }
+    
+    function updateResourceDisplay() {
+        // Update each resource
+        const updateResource = (id, barId, res) => {
+            const pct = (res.available / res.total) * 100;
+            document.getElementById(id).textContent = `${res.available}/${res.total}`;
+            document.getElementById(barId).style.width = `${pct}%`;
+            
+            // Color based on level
+            const bar = document.getElementById(barId);
+            bar.className = 'resource-bar-fill';
+            if (pct <= 25) bar.classList.add('low');
+            else if (pct <= 50) bar.classList.add('medium');
+            
+            // Count styling
+            const countEl = document.getElementById(id);
+            countEl.classList.toggle('low', pct <= 25);
+        };
+        
+        updateResource('resAmbulance', 'resAmbulanceBar', resources.ambulances);
+        updateResource('resHeli', 'resHeliBar', resources.helicopters);
+        updateResource('resFire', 'resFireBar', resources.fireUnits);
+        updateResource('resSAR', 'resSARBar', resources.sarTeams);
+    }
+    
+    function updateOutcomeDisplay() {
+        // Calculate estimated casualties based on damage
+        const collapsed = Object.values(buildingDamage).filter(d => d >= 90).length;
+        const severe = Object.values(buildingDamage).filter(d => d >= 60 && d < 90).length;
+        const baseCasualties = collapsed * 3 + severe * 0.5;
+        outcomeMetrics.estimatedCasualties = Math.round(Math.max(0, baseCasualties - outcomeMetrics.livesSaved));
+        
+        // Update displays
+        document.getElementById('livesSaved').textContent = outcomeMetrics.livesSaved;
+        document.getElementById('estCasualties').textContent = outcomeMetrics.estimatedCasualties;
+        document.getElementById('buildingsCleared').textContent = outcomeMetrics.buildingsCleared;
+        document.getElementById('peopleEvacuated').textContent = outcomeMetrics.peopleEvacuated;
+        
+        // Calculate response score (0-100)
+        const maxScore = 100;
+        const currentScore = Math.min(maxScore, outcomeMetrics.responseScore);
+        const scorePercent = Math.round((currentScore / maxScore) * 100);
+        
+        document.getElementById('responseScoreValue').textContent = `${scorePercent}%`;
+        document.getElementById('responseScoreBar').style.width = `${scorePercent}%`;
+        
+        // Color the lives saved based on positive/negative
+        const livesSavedEl = document.getElementById('livesSaved');
+        livesSavedEl.classList.toggle('positive', outcomeMetrics.livesSaved > 0);
+        livesSavedEl.classList.toggle('negative', outcomeMetrics.livesSaved < 0);
+    }
+    
+    function resetResponseSystem() {
+        // Reset resources
+        resources = {
+            ambulances: { available: 10, total: 10 },
+            helicopters: { available: 4, total: 4 },
+            fireUnits: { available: 8, total: 8 },
+            sarTeams: { available: 6, total: 6 }
+        };
+        
+        // Clear deployed unit markers from map
+        Object.values(deployedUnitMarkers).forEach(marker => {
+            if (map.hasLayer(marker)) {
+                map.removeLayer(marker);
+            }
+        });
+        deployedUnitMarkers = {};
+        
+        // Reset deployed units
+        deployedUnits = [];
+        
+        // Reset outcomes
+        outcomeMetrics = {
+            livesSaved: 0,
+            estimatedCasualties: 0,
+            buildingsCleared: 0,
+            peopleEvacuated: 0,
+            responseScore: 0,
+            decisionsCorrect: 0,
+            decisionsTotal: 0
+        };
+        
+        // Reset decision tracking
+        pendingDecisions = [];
+        decisionHistory = [];
+        currentDecision = null;
+        triggeredDecisions = new Set();
+        if (decisionTimerId) {
+            clearInterval(decisionTimerId);
+            decisionTimerId = null;
+        }
+        
+        // Update displays
+        updateResourceDisplay();
+        updateOutcomeDisplay();
+        updateDeployedList();
+        
+        // Hide decision overlay if visible
+        document.getElementById('decisionOverlay').classList.remove('visible');
+    }
+    
+    function showTsunamiBanner(eta) {
+        const banner = document.getElementById('tsunamiBanner');
+        banner.classList.add('visible');
+        banner.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+        document.getElementById('tsunamiTitle').textContent = '⚠️ TSUNAMI WARNING';
+        document.getElementById('tsunamiETA').textContent = formatTime(Math.floor(eta));
+        document.getElementById('tsunamiMessage').innerHTML = `Arriving in <span id="tsunamiETA">${formatTime(Math.floor(eta))}</span> — Follow evacuation routes to high ground`;
+    }
+    
+    function updateTsunamiBannerArrived() {
+        const banner = document.getElementById('tsunamiBanner');
+        banner.classList.add('visible');
+        banner.style.background = 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)';
+        document.getElementById('tsunamiTitle').textContent = '🔴 TSUNAMI IMPACT';
+        document.getElementById('tsunamiMessage').textContent = 'Move to higher ground immediately — Do not return to coast';
+    }
+    
+    function updateTsunamiBannerReceding() {
+        const banner = document.getElementById('tsunamiBanner');
+        banner.classList.add('visible');
+        banner.style.background = 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)';
+        document.getElementById('tsunamiTitle').textContent = '⚠️ WATERS RECEDING';
+        document.getElementById('tsunamiMessage').textContent = 'Stay on high ground — Additional waves possible';
+    }
+    
+    function updateTsunamiBannerAllClear() {
+        const banner = document.getElementById('tsunamiBanner');
+        banner.classList.add('visible');
+        banner.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+        document.getElementById('tsunamiTitle').textContent = '✅ ALL CLEAR';
+        document.getElementById('tsunamiMessage').textContent = 'Tsunami threat has passed — Exercise caution in damaged areas';
+    }
+    
+    function hideTsunamiBanner() {
+        document.getElementById('tsunamiBanner').classList.remove('visible');
+    }
+    
+    function clearTsunamiLayers() {
+        clearTsunamiVisuals();
+        hideTsunamiBanner();
+        // Reset banner style
+        const banner = document.getElementById('tsunamiBanner');
+        if (banner) {
+            banner.style.background = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
+        }
+    }
+
+    // ============================================
+    // PHASE 2: UPDATE LAYER TOGGLE
+    // ============================================
+    
+    // Store original toggleLayer and extend it
+    const originalToggleLayer = toggleLayer;
+    toggleLayer = function(layerName) {
+        layerVisibility[layerName] = !layerVisibility[layerName];
+        
+        // Update checkbox UI
+        const layerItem = document.querySelector(`[data-layer="${layerName}"]`);
+        if (layerItem) {
+            layerItem.classList.toggle('active', layerVisibility[layerName]);
+            layerItem.querySelector('.layer-checkbox').textContent = layerVisibility[layerName] ? '✓' : '';
+        }
+        
+        // Handle Phase 1 layers
+        if (layerName === 'shockwave' && !layerVisibility.shockwave) {
+            clearShockwaves();
+        }
+        if (layerName === 'epicenter' && !layerVisibility.epicenter && epicenterMarker) {
+            map.removeLayer(epicenterMarker);
+            epicenterMarker = null;
+        }
+        if (layerName === 'damage') {
+            if (layerVisibility.damage) {
+                updateBuildingVisualization();
+            } else {
+                resetBuildingColors();
+            }
+        }
+        
+        // Handle Phase 2 layers
+        if (layerName === 'evacuation') {
+            if (layerVisibility.evacuation && evacuationLayer) {
+                evacuationLayer.addTo(map);
+            } else if (evacuationLayer) {
+                map.removeLayer(evacuationLayer);
+            }
+        }
+        if (layerName === 'responders') {
+            if (layerVisibility.responders) {
+                facilityMarkers.forEach(m => m.addTo(map));
+            } else {
+                facilityMarkers.forEach(m => {
+                    if (map.hasLayer(m)) map.removeLayer(m);
+                });
+            }
+        }
+        if (layerName === 'hazards') {
+            if (layerVisibility.hazards) {
+                hazardLayers.forEach(l => l.addTo(map));
+            } else {
+                hazardLayers.forEach(l => {
+                    if (map.hasLayer(l)) map.removeLayer(l);
+                });
+            }
+        }
+        if (layerName === 'tsunami') {
+            if (!layerVisibility.tsunami) {
+                clearTsunamiLayers();
+            }
+        }
+    };
+
+    // ============================================
     // INIT
     // ============================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -2020,6 +6610,9 @@
         initSearch();
         initTabs();
         initForm();
+        
+        // Initialize simulation with default scenario
+        selectScenario('offshore_tsunami');
     });
     </script>
 </body>
