@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SF Earthquake Risk Assessment</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-deep: #0c0c0f;
+            --bg-base: #121218;
+            --bg-elevated: #1a1a24;
+            --bg-surface: #22222e;
+            --bg-hover: #2a2a38;
+            
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-default: rgba(255,255,255,0.1);
+            --border-strong: rgba(255,255,255,0.15);
+            
+            --text-primary: #f4f4f6;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            
+            --accent-primary: #6366f1;
+            --accent-secondary: #818cf8;
+            
+            --risk-low: #10b981;
+            --risk-low-bg: rgba(16,185,129,0.12);
+            --risk-medium: #f59e0b;
+            --risk-medium-bg: rgba(245,158,11,0.12);
+            --risk-high: #f97316;
+            --risk-high-bg: rgba(249,115,22,0.12);
+            --risk-extreme: #ef4444;
+            --risk-extreme-bg: rgba(239,68,68,0.12);
+            
+            --gradient-risk: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #f59e0b 100%);
+            --gradient-card: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.04) 100%);
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow: hidden;
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            height: 64px;
+            background: var(--bg-base);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-risk);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+        }
+
+        .logo-text {
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--risk-medium-bg);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--risk-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .header-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--risk-medium);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ============ MAIN LAYOUT ============ */
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 480px;
+            height: calc(100vh - 64px);
+        }
+
+        /* ============ MAP SECTION ============ */
+        .map-section {
+            position: relative;
+            background: var(--bg-base);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            z-index: 500;
+            backdrop-filter: blur(12px);
+        }
+
+        .legend-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .legend-scale {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .legend-bar {
+            flex: 1;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        .legend-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            backdrop-filter: blur(12px);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            max-height: 320px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .search-dropdown.show { display: block; }
+
+        .search-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.15s;
+        }
+
+        .search-item:last-child { border-bottom: none; }
+        .search-item:hover { background: var(--bg-hover); }
+
+        .search-item-address {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .risk-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ============ SIDEBAR ============ */
+        .sidebar {
+            background: var(--bg-base);
+            border-left: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Progress Steps */
+        .progress-bar {
+            padding: 20px 24px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .step.active .step-circle {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+        }
+
+        .step.completed .step-circle {
+            background: var(--risk-low);
+            border-color: var(--risk-low);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .step.active .step-label { color: var(--text-primary); }
+        .step.completed .step-label { color: var(--risk-low); }
+
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: var(--border-default);
+            margin: 0 8px;
+        }
+
+        .step-connector.completed { background: var(--risk-low); }
+
+        /* Sidebar Content */
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .sidebar-content::-webkit-scrollbar { width: 6px; }
+        .sidebar-content::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--border-default);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .card-title-icon {
+            font-size: 1rem;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Hero Risk Display */
+        .hero-risk {
+            text-align: center;
+            padding: 32px 20px;
+            background: var(--gradient-card);
+        }
+
+        .hero-neighborhood {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-secondary);
+            margin-bottom: 8px;
+        }
+
+        .hero-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .hero-score {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .hero-score-value {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .hero-score-max {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .hero-description {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Risk Factors Grid */
+        .risk-factors {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .risk-factor {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 14px;
+        }
+
+        .risk-factor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .risk-factor-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .risk-factor-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .risk-bar {
+            height: 4px;
+            background: var(--bg-base);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease-out;
+        }
+
+        /* Score Breakdown */
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+
+        .score-component {
+            text-align: center;
+        }
+
+        .score-component-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .score-component-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        .score-operator {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        /* Explanation Items */
+        .explain-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .explain-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .explain-icon {
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab:hover { color: var(--text-secondary); }
+
+        .tab.active {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Recommendations */
+        .recommendation {
+            display: flex;
+            gap: 14px;
+            padding: 16px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .recommendation:hover {
+            background: var(--bg-hover);
+        }
+
+        .recommendation.critical { border-left-color: var(--risk-extreme); }
+        .recommendation.high { border-left-color: var(--risk-high); }
+        .recommendation.medium { border-left-color: var(--risk-medium); }
+
+        .recommendation-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .recommendation-content { flex: 1; }
+
+        .recommendation-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .priority-tag {
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .priority-tag.critical { background: var(--risk-extreme); color: white; }
+        .priority-tag.high { background: var(--risk-high); color: white; }
+        .priority-tag.medium { background: var(--risk-medium); color: black; }
+
+        .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Neighbor Alert */
+        .neighbor-alert {
+            padding: 16px;
+            background: var(--risk-medium-bg);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+        }
+
+        .neighbor-alert-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--risk-medium);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .neighbor-alert-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Home Details Form */
+        .form-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-sm);
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--bg-base);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .toggle.active {
+            background: var(--risk-low);
+            border-color: var(--risk-low);
+        }
+
+        .toggle.active::after {
+            left: 22px;
+            background: white;
+        }
+
+        /* Buttons */
+        .button-primary {
+            padding: 12px 20px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .button-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .button-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Neighbors List */
+        .neighbors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .neighbor-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+        }
+
+        .neighbor-item-info { flex: 1; }
+
+        .neighbor-item-address {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .neighbor-item-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .neighbor-item-score {
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 160px;
+            margin-top: 16px;
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+
+        .text-low { color: var(--risk-low); }
+        .text-medium { color: var(--risk-medium); }
+        .text-high { color: var(--risk-high); }
+        .text-extreme { color: var(--risk-extreme); }
+
+        .bg-low { background: var(--risk-low-bg); }
+        .bg-medium { background: var(--risk-medium-bg); }
+        .bg-high { background: var(--risk-high-bg); }
+        .bg-extreme { background: var(--risk-extreme-bg); }
+
+        /* Disclaimer */
+        .disclaimer {
+            padding: 12px 16px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* Leaflet Overrides */
+        .leaflet-container {
+            background: var(--bg-deep);
+            font-family: inherit;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .leaflet-popup-content {
+            margin: 12px 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .leaflet-popup-tip { background: var(--bg-elevated); }
+
+        .leaflet-control-zoom {
+            border: none !important;
+            border-radius: var(--radius-md) !important;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .leaflet-control-zoom a {
+            background: var(--bg-elevated) !important;
+            color: var(--text-primary) !important;
+            border-bottom: 1px solid var(--border-subtle) !important;
+            width: 36px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: var(--bg-hover) !important;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Welcome State */
+        .welcome-state {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .welcome-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🌊</div>
+            <div class="logo-text">Quake Risk <span>Assessment</span></div>
+        </div>
+        <div class="header-badge">Synthetic Data Demo</div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="main">
+        <!-- Map Section -->
+        <section class="map-section">
+            <div id="map"></div>
+            <div class="map-legend">
+                <div class="legend-title">Risk Index</div>
+                <div class="legend-scale">
+                    <div class="legend-bar" style="background: var(--risk-low)"></div>
+                    <div class="legend-bar" style="background: var(--risk-medium)"></div>
+                    <div class="legend-bar" style="background: var(--risk-high)"></div>
+                    <div class="legend-bar" style="background: var(--risk-extreme)"></div>
+        </div>
+                <div class="legend-labels">
+                    <span>0</span>
+                    <span>25</span>
+                    <span>50</span>
+                    <span>75</span>
+                    <span>100</span>
+        </div>
+    </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Progress Steps -->
+            <div class="progress-bar">
+                <div class="steps">
+                    <div class="step active" id="step1">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Location</span>
+                    </div>
+                    <div class="step-connector" id="conn1"></div>
+                    <div class="step" id="step2">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">Area Risk</span>
+                    </div>
+                    <div class="step-connector" id="conn2"></div>
+                    <div class="step" id="step3">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">Home Risk</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <!-- Search Bar (Always Visible) -->
+                <div class="search-container" style="margin-bottom: 16px;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search addresses...">
+                    <div class="search-dropdown" id="searchDropdown"></div>
+                </div>
+                
+                <!-- Welcome State -->
+                <div id="welcomeState">
+                    <div class="welcome-state">
+                        <div class="welcome-icon">🏠</div>
+                        <div class="welcome-title">Find Your Earthquake Risk</div>
+                        <div class="welcome-text">Click a neighborhood on the map or search for a Marina building to assess earthquake risk.</div>
+                    </div>
+                </div>
+
+                <!-- Neighborhood Card -->
+                <div class="card hidden" id="neighborhoodCard">
+                    <div class="hero-risk" id="heroRisk">
+                        <div class="hero-neighborhood" id="heroNeighborhood">Marina District</div>
+                        <div class="hero-name" id="heroName">Neighborhood Risk</div>
+                        <div class="hero-score">
+                            <span class="hero-score-value" id="heroScore">74</span>
+                            <span class="hero-score-max">/100</span>
+                        </div>
+                        <div class="hero-badge bg-high text-high" id="heroBadge">
+                            <span>🔶</span>
+                            <span id="heroBadgeText">High Risk</span>
+                        </div>
+                        <div class="hero-description" id="heroDesc">
+                            Built on 1906 earthquake rubble fill. Severe liquefaction damage occurred during 1989 Loma Prieta earthquake.
+                        </div>
+                        <div class="hero-note hidden" id="heroNote" style="margin-top: 12px; padding: 10px 14px; background: rgba(99,102,241,0.15); border-radius: 8px; font-size: 0.8rem; color: #818cf8;">
+                            💡 Building-level analysis available for Marina district only. Search or click a Marina building to see home risk.
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title" style="margin-bottom: 16px;">
+                            <span class="card-title-icon">📊</span>
+                            Risk Factors
+                        </div>
+                        <div class="risk-factors" id="riskFactors"></div>
+                        <div class="chart-container">
+                            <canvas id="neighborhoodChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Home Risk Card -->
+                <div class="card hidden" id="homeCard">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon">🏠</span>
+                            Home Risk Assessment
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="text-align: center; padding: 8px 0 16px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 16px;">
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Selected Address</div>
+                            <div style="font-size: 0.95rem; font-weight: 600;" id="selectedAddress">--</div>
+                        </div>
+
+                        <div class="score-breakdown">
+                            <div class="score-component">
+                                <div class="score-component-value" id="baseScore">--</div>
+                                <div class="score-component-label">Base Risk</div>
+                            </div>
+                            <div class="score-operator">+</div>
+                            <div class="score-component">
+                                <div class="score-component-value" id="neighborBoost">--</div>
+                                <div class="score-component-label">Neighbor</div>
+                            </div>
+                            <div class="score-operator">=</div>
+                            <div class="score-component">
+                                <div class="score-component-value" id="finalScore" style="color: var(--risk-high)">--</div>
+                                <div class="score-component-label">Final</div>
+                            </div>
+                        </div>
+
+                        <div class="tabs">
+                            <button class="tab active" data-tab="why">Why This Score</button>
+                            <button class="tab" data-tab="actions">Actions</button>
+                            <button class="tab" data-tab="whatif">What-If</button>
+                        </div>
+
+                        <!-- Why Tab -->
+                        <div class="tab-content active" id="tab-why">
+                            <div class="explain-list" id="explainList"></div>
+                            <div class="chart-container">
+                                <canvas id="homeChart"></canvas>
+                            </div>
+                            
+                            <!-- Neighbor Risk Section -->
+                            <div style="margin-top: 24px;">
+                                <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">🏘️ Neighbor Risk Impact</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+                                    Buildings within 150m can increase your risk through fire spread, debris blockage, and emergency access issues.
+                                </p>
+                                <div id="neighborSummary"></div>
+                                <div id="neighborsList" style="margin-top: 16px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Actions Tab -->
+                        <div class="tab-content" id="tab-actions">
+                            <div id="priorityActions"></div>
+                            <div class="neighbor-alert hidden" id="neighborAlert">
+                                <div class="neighbor-alert-title">🏘️ Neighbor Advisory</div>
+                                <div class="neighbor-alert-text" id="neighborAlertText"></div>
+                            </div>
+                            <div class="disclaimer">
+                                Recommendations generated from synthetic risk models.
+                            </div>
+                        </div>
+
+                        <!-- What-If Tab -->
+                        <div class="tab-content" id="tab-whatif">
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+                                Adjust building attributes to see how changes would affect your risk score. Changes update in real-time.
+                            </p>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Year Built</label>
+                                    <select class="form-select" id="editYear">
+                                        <option value="2020">2020 or newer</option>
+                                        <option value="2010">2010-2019</option>
+                                        <option value="2000">2000-2009</option>
+                                        <option value="1990">1990-1999</option>
+                                        <option value="1980">1980-1989</option>
+                                        <option value="1970">1970-1979</option>
+                                        <option value="1960">1960-1969</option>
+                                        <option value="1950">1950-1959</option>
+                                        <option value="1940">1940-1949</option>
+                                        <option value="1930">1930-1939</option>
+                                        <option value="1920">1920-1929</option>
+                                        <option value="1910">1910-1919</option>
+                                        <option value="1900">Before 1910</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Construction Material</label>
+                                    <select class="form-select" id="editMaterial">
+                                        <option value="wood">🪵 Wood Frame</option>
+                                        <option value="brick">🧱 Brick/Masonry</option>
+                                        <option value="concrete">🏗️ Reinforced Concrete</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Number of Floors</label>
+                                    <select class="form-select" id="editFloors">
+                                        <option value="1">1 Floor</option>
+                                        <option value="2">2 Floors</option>
+                                        <option value="3">3 Floors</option>
+                                        <option value="4">4 Floors</option>
+                                        <option value="5">5 Floors</option>
+                                        <option value="6">6 Floors</option>
+                                        <option value="7">7 Floors</option>
+                                        <option value="8">8+ Floors</option>
+                                    </select>
+                                </div>
+                                <div class="toggle-row">
+                                    <label style="margin: 0;">Seismically Retrofitted?</label>
+                                    <div class="toggle" id="editRetrofit"></div>
+                                </div>
+                                <div class="toggle-row">
+                                    <label style="margin: 0;">Soft Story (Open Ground Floor)?</label>
+                                    <div class="toggle" id="editSoftStory"></div>
+                                </div>
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <button class="button-primary" id="resetButton" style="width: 100%; margin-top: 8px;">
+                                        🔄 Reset to Actual Values
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 16px; padding: 12px; background: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border-subtle);">
+                                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">💡 Impact of Changes</div>
+                                <div id="whatIfImpact" style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;"></div>
+                            </div>
+                        </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+    // ============================================
+    // STATE & DATA
+    // ============================================
+    let map, geojsonLayer, buildingsLayer, userMarker, neighborCircle;
+    let neighborhoodChart, homeChart;
+    let sfNeighborhoods, processedHomes = [];
+    let selectedHome = null;
+    let marinaShowingBuildings = false; // Track if Marina is in building view mode
+
+    const marinaRisk = {
+        name: "Marina",
+        risks: { seismic: 78, liquefaction: 95, tsunami: 72, infrastructure: 58, displacement: 52, property: 88 },
+        overallRisk: 74,
+        summary: "Built on 1906 earthquake rubble fill. Severe liquefaction damage occurred during 1989 Loma Prieta earthquake."
+    };
+
+    const neighborhoodRiskData = {
+        "Marina": marinaRisk,
+        "Rincon Hill": { name: "Rincon Hill", risks: { seismic: 65, liquefaction: 70, tsunami: 50, infrastructure: 55, displacement: 40, property: 75 }, overallRisk: 59, summary: "High-rise residential area on filled land near the bay. Modern construction but high liquefaction potential." },
+        "South Beach": { name: "South Beach", risks: { seismic: 68, liquefaction: 78, tsunami: 65, infrastructure: 50, displacement: 42, property: 78 }, overallRisk: 64, summary: "Waterfront development on filled land. High liquefaction and tsunami exposure due to proximity to bay." },
+        "Chinatown": { name: "Chinatown", risks: { seismic: 70, liquefaction: 32, tsunami: 15, infrastructure: 78, displacement: 85, property: 72 }, overallRisk: 59, summary: "Historic dense neighborhood with many older buildings. High displacement vulnerability." },
+        "Nob Hill": { name: "Nob Hill", risks: { seismic: 38, liquefaction: 15, tsunami: 10, infrastructure: 42, displacement: 32, property: 65 }, overallRisk: 34, summary: "Hilltop on solid rock. Historic buildings generally well-maintained." },
+        "Ingleside": { name: "Ingleside", risks: { seismic: 40, liquefaction: 28, tsunami: 8, infrastructure: 45, displacement: 50, property: 42 }, overallRisk: 36, summary: "Residential neighborhood with moderate risk. Generally stable ground conditions." },
+        "Castro": { name: "Castro", risks: { seismic: 45, liquefaction: 22, tsunami: 8, infrastructure: 48, displacement: 42, property: 55 }, overallRisk: 37, summary: "Hillside neighborhood with good bedrock. Well-maintained Victorians." },
+        "Sunset": { name: "Sunset", risks: { seismic: 45, liquefaction: 52, tsunami: 55, infrastructure: 35, displacement: 38, property: 42 }, overallRisk: 45, summary: "Large residential area with moderate liquefaction and tsunami risk due to sandy soil." },
+        "Bayview": { name: "Bayview", risks: { seismic: 55, liquefaction: 68, tsunami: 52, infrastructure: 72, displacement: 78, property: 58 }, overallRisk: 64, summary: "Industrial waterfront with infrastructure concerns. Waterfront areas face liquefaction and tsunami exposure." },
+        "Portola": { name: "Portola", risks: { seismic: 40, liquefaction: 28, tsunami: 8, infrastructure: 45, displacement: 48, property: 40 }, overallRisk: 35, summary: "Residential area with moderate risk profile. Generally stable ground." },
+        "Lake Merced": { name: "Lake Merced", risks: { seismic: 40, liquefaction: 48, tsunami: 35, infrastructure: 35, displacement: 32, property: 40 }, overallRisk: 38, summary: "Area near Lake Merced with moderate liquefaction risk due to sandy soil." },
+        "Twin Peaks": { name: "Twin Peaks", risks: { seismic: 35, liquefaction: 10, tsunami: 5, infrastructure: 30, displacement: 22, property: 45 }, overallRisk: 25, summary: "High elevation provides natural protection. Solid rock foundation." },
+        "North Beach": { name: "North Beach", risks: { seismic: 55, liquefaction: 38, tsunami: 32, infrastructure: 48, displacement: 42, property: 55 }, overallRisk: 45, summary: "Historic Italian neighborhood. Some liquefaction risk near waterfront." },
+        "Tenderloin": { name: "Tenderloin", risks: { seismic: 72, liquefaction: 35, tsunami: 12, infrastructure: 85, displacement: 92, property: 78 }, overallRisk: 62, summary: "Dense older buildings, many unreinforced masonry. High displacement risk due to vulnerable population." },
+        "SoMa": { name: "SoMa", risks: { seismic: 70, liquefaction: 78, tsunami: 45, infrastructure: 68, displacement: 62, property: 72 }, overallRisk: 66, summary: "High liquefaction risk on filled marshland. Mix of old warehouses and new high-rises." },
+        "Mission": { name: "Mission", risks: { seismic: 55, liquefaction: 32, tsunami: 10, infrastructure: 55, displacement: 65, property: 52 }, overallRisk: 45, summary: "Mixed residential with Victorian buildings. Generally stable ground but older housing." },
+        "Financial District": { name: "Financial District", risks: { seismic: 68, liquefaction: 72, tsunami: 55, infrastructure: 75, displacement: 48, property: 82 }, overallRisk: 67, summary: "High-density commercial core on filled bay land. Mix of modern towers and older buildings." },
+        "Lower Pacific Heights": { name: "Lower Pacific Heights", risks: { seismic: 40, liquefaction: 20, tsunami: 10, infrastructure: 38, displacement: 30, property: 58 }, overallRisk: 33, summary: "Residential area with moderate risk. Mix of Victorian and modern construction." },
+        "Pacific Heights": { name: "Pacific Heights", risks: { seismic: 35, liquefaction: 12, tsunami: 8, infrastructure: 35, displacement: 28, property: 70 }, overallRisk: 31, summary: "Affluent hillside area with solid ground and modern construction standards." },
+        "Taraval": { name: "Taraval", risks: { seismic: 45, liquefaction: 50, tsunami: 52, infrastructure: 38, displacement: 38, property: 42 }, overallRisk: 44, summary: "Residential area in outer Sunset. Sandy soil increases liquefaction risk." },
+        "Panhandle": { name: "Panhandle", risks: { seismic: 48, liquefaction: 25, tsunami: 8, infrastructure: 50, displacement: 45, property: 52 }, overallRisk: 38, summary: "Area adjacent to Golden Gate Park. Mix of Victorian buildings and newer construction." },
+        "Inner Richmond": { name: "Inner Richmond", risks: { seismic: 42, liquefaction: 35, tsunami: 45, infrastructure: 38, displacement: 35, property: 42 }, overallRisk: 40, summary: "Residential district with moderate risk. Some coastal tsunami exposure." },
+        "Outer Richmond": { name: "Outer Richmond", risks: { seismic: 42, liquefaction: 42, tsunami: 58, infrastructure: 38, displacement: 35, property: 42 }, overallRisk: 43, summary: "Coastal area with higher tsunami exposure near Ocean Beach." },
+        "Bayshore": { name: "Bayshore", risks: { seismic: 50, liquefaction: 60, tsunami: 45, infrastructure: 65, displacement: 70, property: 52 }, overallRisk: 57, summary: "Industrial area with infrastructure concerns. Proximity to bay increases exposure." },
+        "Russian Hill": { name: "Russian Hill", risks: { seismic: 40, liquefaction: 18, tsunami: 12, infrastructure: 40, displacement: 35, property: 60 }, overallRisk: 34, summary: "Hillside neighborhood with good bedrock foundation." },
+        "Potrero Hill": { name: "Potrero Hill", risks: { seismic: 42, liquefaction: 25, tsunami: 15, infrastructure: 45, displacement: 40, property: 50 }, overallRisk: 36, summary: "Hilltop neighborhood with good bedrock and moderate risk." },
+        "Haight-Ashbury": { name: "Haight-Ashbury", risks: { seismic: 48, liquefaction: 25, tsunami: 8, infrastructure: 50, displacement: 45, property: 52 }, overallRisk: 38, summary: "Historic neighborhood with mixed Victorian housing stock." },
+        "Western Addition": { name: "Western Addition", risks: { seismic: 50, liquefaction: 28, tsunami: 10, infrastructure: 55, displacement: 60, property: 55 }, overallRisk: 43, summary: "Mixed housing with some older vulnerable structures." },
+        "Presidio": { name: "Presidio", risks: { seismic: 38, liquefaction: 20, tsunami: 30, infrastructure: 30, displacement: 20, property: 35 }, overallRisk: 29, summary: "Former military base with varied terrain. Some coastal exposure." },
+        "Excelsior": { name: "Excelsior", risks: { seismic: 42, liquefaction: 30, tsunami: 8, infrastructure: 48, displacement: 52, property: 45 }, overallRisk: 38, summary: "Residential neighborhood with moderate earthquake risk." },
+        "Visitacion Valley": { name: "Visitacion Valley", risks: { seismic: 45, liquefaction: 35, tsunami: 12, infrastructure: 55, displacement: 60, property: 48 }, overallRisk: 43, summary: "Working-class neighborhood with moderate vulnerability." },
+        "Bernal Heights": { name: "Bernal Heights", risks: { seismic: 40, liquefaction: 22, tsunami: 8, infrastructure: 42, displacement: 45, property: 48 }, overallRisk: 34, summary: "Hilltop neighborhood with good bedrock. Mix of older homes." },
+        "Glen Park": { name: "Glen Park", risks: { seismic: 38, liquefaction: 20, tsunami: 5, infrastructure: 38, displacement: 35, property: 45 }, overallRisk: 30, summary: "Quiet residential area with moderate risk profile." },
+        "Noe Valley": { name: "Noe Valley", risks: { seismic: 42, liquefaction: 22, tsunami: 8, infrastructure: 40, displacement: 38, property: 55 }, overallRisk: 34, summary: "Family-friendly neighborhood with moderate earthquake risk." },
+        "Diamond Heights": { name: "Diamond Heights", risks: { seismic: 36, liquefaction: 15, tsunami: 5, infrastructure: 35, displacement: 30, property: 48 }, overallRisk: 28, summary: "Elevated neighborhood with good ground stability." },
+        "Dogpatch": { name: "Dogpatch", risks: { seismic: 60, liquefaction: 65, tsunami: 45, infrastructure: 55, displacement: 45, property: 62 }, overallRisk: 55, summary: "Former industrial waterfront. Filled land increases liquefaction risk." }
+    };
+
+    const marinaStreets = ["Marina Blvd", "Beach St", "North Point St", "Bay St", "Francisco St", "Chestnut St", "Lombard St", "Greenwich St", "Filbert St", "Union St", "Green St", "Vallejo St", "Broadway", "Pacific Ave", "Jackson St", "Buchanan St", "Webster St", "Fillmore St", "Steiner St", "Pierce St", "Scott St", "Divisadero St", "Broderick St", "Baker St", "Lyon St"];
+
+    const recommendations = {
+        retrofit: { icon: "🔧", title: "Seismic Retrofitting", desc: "Strengthen foundation and structural connections to resist earthquake forces.", category: "seismic", triggers: ["old_building", "brick", "not_retrofitted"], priority: 3 },
+        foundation: { icon: "🏗️", title: "Foundation Inspection", desc: "Get a professional structural assessment for cracks and weaknesses.", category: "seismic", triggers: ["old_building", "liquefaction_high"], priority: 2 },
+        insurance: { icon: "📋", title: "Earthquake Insurance", desc: "Standard homeowners policies don't cover earthquake damage.", category: "financial", triggers: ["high_property_risk", "high_risk"], priority: 2 },
+        kit: { icon: "🎒", title: "Emergency Supply Kit", desc: "Prepare 72+ hours of water, food, medications, and first aid.", category: "evacuation", triggers: ["always"], priority: 1 },
+        evacuation: { icon: "🚪", title: "Evacuation Plan", desc: "Create and practice family evacuation routes.", category: "evacuation", triggers: ["tsunami_risk", "high_displacement"], priority: 2 },
+        water_heater: { icon: "🔥", title: "Secure Water Heater", desc: "Strap to wall studs to prevent tipping and gas leaks.", category: "fire", triggers: ["always"], priority: 1 },
+        gas: { icon: "⛽", title: "Gas Shut-off Knowledge", desc: "Know how to manually shut off your gas supply.", category: "fire", triggers: ["always"], priority: 1 },
+        furniture: { icon: "🪑", title: "Anchor Furniture", desc: "Secure bookcases and tall furniture to wall studs.", category: "seismic", triggers: ["always"], priority: 1 },
+        neighbors: { icon: "🤝", title: "Neighbor Coordination", desc: "Coordinate emergency plans with close neighbors.", category: "community", triggers: ["high_neighbor_risk"], priority: 2 },
+        supplies: { icon: "📦", title: "Extended Supplies", desc: "Prepare 7-14 days of supplies due to potential access issues.", category: "evacuation", triggers: ["high_neighbor_risk", "high_risk"], priority: 2 }
+    };
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    const getRiskColor = r => r <= 25 ? '#10b981' : r <= 50 ? '#f59e0b' : r <= 75 ? '#f97316' : '#ef4444';
+    const getRiskClass = r => r <= 25 ? 'low' : r <= 50 ? 'medium' : r <= 75 ? 'high' : 'extreme';
+    const getRiskLabel = r => r <= 25 ? 'Low Risk' : r <= 50 ? 'Medium Risk' : r <= 75 ? 'High Risk' : 'Extreme Risk';
+    const getRiskIcon = r => r <= 25 ? '✅' : r <= 50 ? '⚠️' : r <= 75 ? '🔶' : '🚨';
+
+    const seededRandom = s => { const x = Math.sin(s) * 10000; return x - Math.floor(x); };
+
+    const getDistance = (lat1, lng1, lat2, lng2) => {
+        const R = 6371000, dLat = (lat2 - lat1) * Math.PI / 180, dLng = (lng2 - lng1) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    };
+
+    // ============================================
+    // DATA PROCESSING
+    // ============================================
+    function processBuildings(data) {
+        return data.features.map((f, i) => {
+            const coords = f.geometry.coordinates[0][0];
+            const lat = coords.reduce((s,c) => s+c[1], 0) / coords.length;
+            const lng = coords.reduce((s,c) => s+c[0], 0) / coords.length;
+            const heightM = parseFloat(f.properties.hgt_median_m) || 3;
+            
+            let floors = Math.max(1, Math.min(12, Math.round(heightM / 2.5)));
+            if (i % 7 === 0) floors = Math.max(1, floors - 1);
+            if (i % 11 === 0) floors = Math.min(12, floors + 1);
+
+            const seed = i * 12345;
+            const r1 = seededRandom(seed), r2 = seededRandom(seed+1), r3 = seededRandom(seed+2), r4 = seededRandom(seed+3), r5 = seededRandom(seed+4), r6 = seededRandom(seed+5);
+
+            // CREATE DISTINCT SPATIAL ZONES with different risk profiles
+            // This creates neighborhoods within the Marina with clear differences
+            
+            // Define zones based on lat/lng
+            const isWestern = lng < -122.438; // Western Marina (safer, newer development)
+            const isEastern = lng > -122.432; // Eastern Marina (historic, riskier)
+            const isNorthern = lat > 37.803;  // Northern (coastal, more brick)
+            const isSouthern = lat < 37.801;  // Southern (inland, mixed)
+            
+            // ZONE 1: Western Marina - "Safe Zone" (modern, well-maintained)
+            // ZONE 2: Eastern Marina - "Historic High-Risk Zone" (old, unreinforced)
+            // ZONE 3: Northern Marina - "Coastal Brick Zone" (brick buildings, tsunami risk)
+            // ZONE 4: Southern Marina - "Mixed Zone" (varied ages and materials)
+            
+            let yearBuilt, material, retrofitted;
+            
+            if (isWestern) {
+                // WESTERN = SAFER, NEWER AREA
+                // 60% modern (2000+), 30% recent (1980-2000), 10% old
+                if (r1 < 0.60) {
+                    yearBuilt = 2000 + Math.floor(r2 * 24);
+                } else if (r1 < 0.90) {
+                    yearBuilt = 1980 + Math.floor(r2 * 20);
+                } else {
+                    yearBuilt = 1960 + Math.floor(r2 * 20);
+                }
+                // More concrete and modern materials
+                material = r3 < 0.60 ? 'concrete' : r3 < 0.85 ? 'wood' : 'brick';
+                // High retrofit rate
+                retrofitted = yearBuilt >= 2010 ? (r4 < 0.85) : yearBuilt >= 1990 ? (r4 < 0.65) : (r4 < 0.45);
+                
+            } else if (isEastern) {
+                // EASTERN = HIGH-RISK HISTORIC AREA
+                // 50% very old (pre-1940), 30% old (1940-1970), 20% newer
+                if (r1 < 0.50) {
+                    yearBuilt = 1905 + Math.floor(r2 * 35);
+                } else if (r1 < 0.80) {
+                    yearBuilt = 1940 + Math.floor(r2 * 30);
+                } else {
+                    yearBuilt = 1990 + Math.floor(r2 * 34);
+                }
+                // More wood and brick
+                material = r3 < 0.55 ? 'wood' : r3 < 0.85 ? 'brick' : 'concrete';
+                // LOW retrofit rate in old buildings
+                retrofitted = yearBuilt >= 2010 ? (r4 < 0.75) : yearBuilt >= 1990 ? (r4 < 0.35) : (r4 < 0.10);
+                
+            } else if (isNorthern && !isWestern && !isEastern) {
+                // NORTHERN = COASTAL BRICK ZONE
+                // Mix of eras but more brick
+                if (r1 < 0.35) {
+                    yearBuilt = 1920 + Math.floor(r2 * 30);
+                } else if (r1 < 0.65) {
+                    yearBuilt = 1960 + Math.floor(r2 * 30);
+                } else {
+                    yearBuilt = 1995 + Math.floor(r2 * 29);
+                }
+                // Heavy brick presence
+                material = r3 < 0.25 ? 'wood' : r3 < 0.70 ? 'brick' : 'concrete';
+                // Moderate retrofit rate
+                retrofitted = yearBuilt >= 2010 ? (r4 < 0.75) : yearBuilt >= 1990 ? (r4 < 0.45) : (r4 < 0.20);
+                
+            } else {
+                // SOUTHERN/CENTRAL = MIXED ZONE (true variety)
+                // Uniform distribution across eras
+                if (r1 < 0.20) {
+                    yearBuilt = 1910 + Math.floor(r2 * 30);
+                } else if (r1 < 0.35) {
+                    yearBuilt = 1940 + Math.floor(r2 * 25);
+                } else if (r1 < 0.55) {
+                    yearBuilt = 1965 + Math.floor(r2 * 25);
+                } else if (r1 < 0.75) {
+                    yearBuilt = 1990 + Math.floor(r2 * 20);
+                } else {
+                    yearBuilt = 2010 + Math.floor(r2 * 14);
+                }
+                // Balanced materials
+                material = r3 < 0.50 ? 'wood' : r3 < 0.75 ? 'concrete' : 'brick';
+                // Varied retrofit
+                retrofitted = yearBuilt >= 2010 ? (r4 < 0.80) : yearBuilt >= 1990 ? (r4 < 0.50) : yearBuilt >= 1970 ? (r4 < 0.30) : (r4 < 0.20);
+            }
+
+            // Coastal determination based on actual location
+            let nearCoast;
+            if (lat > 37.8045) {
+                nearCoast = true;
+            } else if (lat > 37.803) {
+                nearCoast = r5 < 0.75;
+            } else if (lat > 37.801) {
+                nearCoast = r5 < 0.30;
+            } else {
+                nearCoast = r5 < 0.10;
+            }
+
+            const streetNum = 100 + Math.floor(r1 * 2900);
+            const street = marinaStreets[Math.floor(r2 * marinaStreets.length)];
+            const address = `${streetNum} ${street}`;
+
+            // Soft story: open ground floor (garage/parking)
+            // More common in buildings 3+ floors built 1960-2000, before soft story ordinances
+            const softStory = floors >= 3 && yearBuilt >= 1960 && yearBuilt < 2000 && r6 < 0.4;
+
+            return { 
+                id: f.properties.area_id || `bldg-${i}`, 
+                address, 
+                lat, 
+                lng, 
+                yearBuilt, 
+                floors, 
+                material, 
+                retrofitted, 
+                nearCoast,
+                softStory,
+                geometry: f.geometry // Store the actual building footprint geometry
+            };
+        });
+    }
+
+    // ============================================
+    // RISK CALCULATIONS
+    // ============================================
+    function computeBaseHomeRisk(home, nr) {
+        let risks = { ...nr.risks };
+        const factors = [];
+        const age = 2024 - home.yearBuilt;
+
+        if (age > 80) { risks.seismic += 15; risks.infrastructure += 10; factors.push({ text: `Pre-1940 building (${home.yearBuilt}) lacks modern codes`, type: 'negative' }); }
+        else if (age > 60) { risks.seismic += 10; factors.push({ text: `Mid-century construction predates major codes`, type: 'negative' }); }
+        else if (age > 40) { risks.seismic += 5; factors.push({ text: `Building may need seismic updates`, type: 'neutral' }); }
+        else if (age <= 20) { risks.seismic -= 5; factors.push({ text: `Modern construction meets current codes`, type: 'positive' }); }
+
+        if (home.material === 'brick') { risks.seismic += 18; risks.property += 10; factors.push({ text: 'Unreinforced masonry is highly vulnerable', type: 'negative' }); }
+        else if (home.material === 'wood') { risks.seismic -= 3; factors.push({ text: 'Wood-frame provides flexibility', type: 'positive' }); }
+        else { risks.seismic -= 8; risks.property -= 5; factors.push({ text: 'Reinforced concrete is most resistant', type: 'positive' }); }
+
+        if (home.floors >= 5) { risks.seismic += 8; risks.displacement += 10; factors.push({ text: `Tall building (${home.floors}F) has amplified shaking`, type: 'negative' }); }
+        else if (home.floors === 1) { risks.seismic -= 5; factors.push({ text: 'Single-story has lower collapse risk', type: 'positive' }); }
+
+        if (home.retrofitted) { risks.seismic -= 15; risks.infrastructure -= 10; factors.push({ text: 'Seismic retrofitting improves resilience', type: 'positive' }); }
+        else { risks.seismic += 8; factors.push({ text: 'Building not seismically retrofitted', type: 'negative' }); }
+
+        if (home.softStory) { risks.seismic += 20; risks.property += 15; risks.displacement += 10; factors.push({ text: 'Soft story (open ground floor) highly vulnerable to collapse', type: 'negative' }); }
+
+        if (home.nearCoast) { risks.tsunami += 15; risks.liquefaction += 5; factors.push({ text: 'Located in coastal hazard zone', type: 'negative' }); }
+
+        Object.keys(risks).forEach(k => risks[k] = Math.max(0, Math.min(100, risks[k])));
+        const baseRisk = Math.round(risks.seismic*0.25 + risks.liquefaction*0.25 + risks.tsunami*0.15 + risks.infrastructure*0.15 + risks.displacement*0.1 + risks.property*0.1);
+
+        return { risks, baseRisk, factors };
+    }
+
+    function computeNeighborBoost(home, allHomes) {
+        const neighbors = allHomes.filter(h => h.id !== home.id && getDistance(home.lat, home.lng, h.lat, h.lng) <= 150)
+            .map(h => ({ home: h, baseRisk: computeBaseHomeRisk(h, marinaRisk).baseRisk }));
+
+        if (!neighbors.length) return { boost: 0, neighbors: [], avgRisk: 0, vulnerableCount: 0, highRiskCount: 0 };
+
+        const avgRisk = Math.round(neighbors.reduce((s,n) => s + n.baseRisk, 0) / neighbors.length);
+        const vulnerableCount = neighbors.filter(n => n.home.material === 'wood' && !n.home.retrofitted && n.home.yearBuilt < 1970).length;
+        const highRiskCount = neighbors.filter(n => n.baseRisk >= 70).length;
+
+        // More gradual boost calculation with lower ceiling
+        let boost = 0;
+        
+        // Average risk component (0-6 points)
+        if (avgRisk >= 75) boost += 6;
+        else if (avgRisk >= 68) boost += 5;
+        else if (avgRisk >= 60) boost += 3;
+        else if (avgRisk >= 52) boost += 2;
+        else if (avgRisk >= 45) boost += 1;
+        
+        // Vulnerable old wood buildings (0-5 points)
+        if (vulnerableCount >= 6) boost += 5;
+        else if (vulnerableCount >= 4) boost += 3;
+        else if (vulnerableCount >= 2) boost += 2;
+        else if (vulnerableCount >= 1) boost += 1;
+        
+        // High-risk neighbors (0-3 points)
+        if (highRiskCount >= 6) boost += 3;
+        else if (highRiskCount >= 4) boost += 2;
+        else if (highRiskCount >= 2) boost += 1;
+        
+        boost = Math.round(Math.min(15, boost));
+
+        return { boost, neighbors: neighbors.slice(0, 8), avgRisk, vulnerableCount, highRiskCount };
+    }
+
+    function generateRecommendations(home, nr, neighborResult, finalRisk) {
+        const triggers = new Set(['always']);
+
+        if (home.yearBuilt < 1975) triggers.add('old_building');
+        if (home.material === 'brick') triggers.add('brick');
+        if (!home.retrofitted) triggers.add('not_retrofitted');
+        if (nr.risks.liquefaction > 70) triggers.add('liquefaction_high');
+        if (nr.risks.tsunami > 50) triggers.add('tsunami_risk');
+        if (nr.risks.property > 70) triggers.add('high_property_risk');
+        if (nr.risks.displacement > 60) triggers.add('high_displacement');
+        if (neighborResult.vulnerableCount >= 3 || neighborResult.avgRisk > 65) triggers.add('high_neighbor_risk');
+        if (finalRisk > 60) triggers.add('high_risk');
+
+        const scored = Object.entries(recommendations).map(([k, r]) => {
+            let score = r.triggers.filter(t => triggers.has(t)).length * r.priority;
+            return { key: k, ...r, score };
+        }).filter(r => r.score > 0).sort((a,b) => b.score - a.score);
+
+        const neighborAdvice = [];
+        if (triggers.has('high_neighbor_risk')) {
+            neighborAdvice.push('Coordinate emergency plans with neighbors for mutual aid.');
+            if (neighborResult.vulnerableCount >= 3) neighborAdvice.push('Fire risk amplified by nearby wood structures.');
+        }
+
+        return { priority: scored.slice(0, 4), neighborAdvice };
+    }
+
+    // ============================================
+    // UI UPDATES
+    // ============================================
+    function updateNeighborhoodPanel(data) {
+        document.getElementById('heroName').textContent = data.name;
+        document.getElementById('heroScore').textContent = data.overallRisk;
+        document.getElementById('heroScore').style.color = getRiskColor(data.overallRisk);
+        document.getElementById('heroBadge').className = `hero-badge bg-${getRiskClass(data.overallRisk)} text-${getRiskClass(data.overallRisk)}`;
+        document.getElementById('heroBadgeText').textContent = getRiskLabel(data.overallRisk);
+        document.getElementById('heroDesc').textContent = data.summary;
+
+        const factors = ['seismic', 'liquefaction', 'tsunami', 'infrastructure', 'displacement', 'property'];
+        const icons = { seismic: '🌍', liquefaction: '💧', tsunami: '🌊', infrastructure: '🏗️', displacement: '🚶', property: '🏠' };
+
+        document.getElementById('riskFactors').innerHTML = factors.map(f => `
+            <div class="risk-factor">
+                <div class="risk-factor-header">
+                    <span class="risk-factor-label">${icons[f]} ${f.charAt(0).toUpperCase() + f.slice(1)}</span>
+                    <span class="risk-factor-value" style="color: ${getRiskColor(data.risks[f])}">${data.risks[f]}</span>
+                </div>
+                <div class="risk-bar"><div class="risk-bar-fill" style="width: ${data.risks[f]}%; background: ${getRiskColor(data.risks[f])}"></div></div>
+            </div>
+        `).join('');
+
+        updateNeighborhoodChart(data.risks);
+    }
+
+    function updateNeighborhoodChart(risks) {
+        const ctx = document.getElementById('neighborhoodChart').getContext('2d');
+        if (neighborhoodChart) neighborhoodChart.destroy();
+
+        neighborhoodChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Seismic', 'Liquefaction', 'Tsunami', 'Infrastructure', 'Displacement', 'Property'],
+                datasets: [{ data: Object.values(risks), backgroundColor: 'rgba(99,102,241,0.2)', borderColor: '#6366f1', borderWidth: 2, pointBackgroundColor: '#6366f1', pointRadius: 3 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, color: '#6b6b7b', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.06)' }, angleLines: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { color: '#a0a0b0', font: { size: 10 } } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    function updateHomePanel(home) {
+        selectedHome = home;
+        document.getElementById('selectedAddress').textContent = home.address + ', Marina';
+
+        const baseResult = computeBaseHomeRisk(home, marinaRisk);
+        const neighborResult = computeNeighborBoost(home, processedHomes);
+        const finalRisk = Math.min(100, baseResult.baseRisk + neighborResult.boost);
+
+        document.getElementById('baseScore').textContent = baseResult.baseRisk;
+        document.getElementById('baseScore').style.color = getRiskColor(baseResult.baseRisk);
+        document.getElementById('neighborBoost').textContent = neighborResult.boost;
+        document.getElementById('neighborBoost').style.color = neighborResult.boost > 5 ? '#ef4444' : '#f59e0b';
+        document.getElementById('finalScore').textContent = finalRisk;
+        document.getElementById('finalScore').style.color = getRiskColor(finalRisk);
+
+        // Explanations
+        document.getElementById('explainList').innerHTML = baseResult.factors.map(f => `
+            <div class="explain-item animate-in">
+                <span class="explain-icon">${f.type === 'positive' ? '✅' : f.type === 'negative' ? '❌' : 'ℹ️'}</span>
+                <span>${f.text}</span>
+            </div>
+        `).join('') + (neighborResult.vulnerableCount > 0 ? `<div class="explain-item animate-in"><span class="explain-icon">🏘️</span><span>Surrounded by ${neighborResult.vulnerableCount} vulnerable structures</span></div>` : '');
+
+        // Home chart
+        updateHomeChart(baseResult.risks);
+
+    // Recommendations
+        const recs = generateRecommendations(home, marinaRisk, neighborResult, finalRisk);
+        document.getElementById('priorityActions').innerHTML = recs.priority.map((r, i) => `
+            <div class="recommendation ${i === 0 ? 'critical' : i === 1 ? 'high' : 'medium'} animate-in">
+                <div class="recommendation-icon">${r.icon}</div>
+                <div class="recommendation-content">
+                    <div class="recommendation-title">${r.title} <span class="priority-tag ${i === 0 ? 'critical' : i === 1 ? 'high' : 'medium'}">${i === 0 ? 'Critical' : i === 1 ? 'High' : 'Medium'}</span></div>
+                    <div class="recommendation-desc">${r.desc}</div>
+                    <div class="category-tag">${r.category}</div>
+                </div>
+            </div>
+        `).join('');
+
+        if (recs.neighborAdvice.length) {
+            document.getElementById('neighborAlert').classList.remove('hidden');
+            document.getElementById('neighborAlertText').innerHTML = recs.neighborAdvice.map(a => `• ${a}`).join('<br>');
+        } else {
+            document.getElementById('neighborAlert').classList.add('hidden');
+        }
+
+        // Top 3 Neighbors list
+        if (neighborResult.neighbors.length > 0) {
+            document.getElementById('neighborsList').innerHTML = `
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                    Nearest High-Risk Buildings
+                </div>
+                ${neighborResult.neighbors.slice(0, 3).map(n => `
+                    <div class="neighbor-item">
+                        <div class="risk-dot" style="background: ${getRiskColor(n.baseRisk)}"></div>
+                        <div class="neighbor-item-info">
+                            <div class="neighbor-item-address">${n.home.address}</div>
+                            <div class="neighbor-item-meta">${n.home.material === 'wood' ? '🪵' : n.home.material === 'brick' ? '🧱' : '🏗️'} ${n.home.yearBuilt} · ${n.home.floors}F ${n.home.retrofitted ? '✓' : ''}</div>
+                        </div>
+                        <div class="neighbor-item-score" style="color: ${getRiskColor(n.baseRisk)}">${n.baseRisk}</div>
+                    </div>
+                `).join('')}
+            `;
+        } else {
+            document.getElementById('neighborsList').innerHTML = '';
+        }
+
+        // Neighbor summary with visual cards
+        const boostColor = neighborResult.boost >= 10 ? '#ef4444' : neighborResult.boost >= 6 ? '#f97316' : neighborResult.boost >= 3 ? '#f59e0b' : '#10b981';
+        document.getElementById('neighborSummary').innerHTML = `
+            <div style="background: var(--bg-surface); padding: 14px; border-radius: 10px; border: 1px solid var(--border-subtle);">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
+                    <div style="background: var(--bg-card); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total</div>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary);">${neighborResult.neighbors.length}</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted);">buildings</div>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Avg Risk</div>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: ${getRiskColor(neighborResult.avgRisk)};">${neighborResult.avgRisk}</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted);">score</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <div style="flex: 1; background: var(--bg-card); padding: 8px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1rem; font-weight: 700; color: #ef4444;">${neighborResult.highRiskCount || 0}</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted);">High-Risk</div>
+                    </div>
+                    <div style="flex: 1; background: var(--bg-card); padding: 8px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1rem; font-weight: 700; color: #f59e0b;">${neighborResult.vulnerableCount || 0}</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted);">Vulnerable</div>
+                    </div>
+                </div>
+                
+                <div style="background: ${boostColor}15; padding: 10px; border-radius: 8px; border: 1.5px solid ${boostColor};">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div style="font-size: 0.65rem; color: ${boostColor}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Neighbor Boost</div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Added to base score</div>
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: ${boostColor};">+${neighborResult.boost}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Form
+        updateFormFromHome(home);
+    }
+
+    function updateHomeChart(risks) {
+        const ctx = document.getElementById('homeChart').getContext('2d');
+        if (homeChart) homeChart.destroy();
+
+        homeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Seismic', 'Liquefaction', 'Tsunami', 'Infra.', 'Displace.', 'Property'],
+                datasets: [{ data: Object.values(risks), backgroundColor: Object.values(risks).map(getRiskColor), borderRadius: 4 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                scales: { x: { beginAtZero: true, max: 100, ticks: { color: '#6b6b7b' }, grid: { color: 'rgba(255,255,255,0.06)' } }, y: { ticks: { color: '#a0a0b0', font: { size: 10 } }, grid: { display: false } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    function updateFormFromHome(home) {
+        // More granular year selection
+        const year = home.yearBuilt;
+        const yearValue = year >= 2020 ? '2020' : year >= 2010 ? '2010' : year >= 2000 ? '2000' : 
+                          year >= 1990 ? '1990' : year >= 1980 ? '1980' : year >= 1970 ? '1970' :
+                          year >= 1960 ? '1960' : year >= 1950 ? '1950' : year >= 1940 ? '1940' :
+                          year >= 1930 ? '1930' : year >= 1920 ? '1920' : year >= 1910 ? '1910' : '1900';
+        document.getElementById('editYear').value = yearValue;
+        document.getElementById('editFloors').value = Math.min(8, home.floors);
+        document.getElementById('editMaterial').value = home.material;
+        document.getElementById('editRetrofit').classList.toggle('active', home.retrofitted);
+        document.getElementById('editSoftStory').classList.toggle('active', home.softStory);
+    }
+
+    function recalculate() {
+        if (!selectedHome) return;
+        const yearMap = { 
+            '2020': 2022, '2010': 2015, '2000': 2005, '1990': 1995, '1980': 1985, 
+            '1970': 1975, '1960': 1965, '1950': 1955, '1940': 1945, '1930': 1935, 
+            '1920': 1925, '1910': 1915, '1900': 1905 
+        };
+        const modified = {
+            ...selectedHome,
+            yearBuilt: yearMap[document.getElementById('editYear').value] || 1905,
+            floors: parseInt(document.getElementById('editFloors').value),
+            material: document.getElementById('editMaterial').value,
+            retrofitted: document.getElementById('editRetrofit').classList.contains('active'),
+            softStory: document.getElementById('editSoftStory').classList.contains('active')
+        };
+        
+        // Calculate original and modified scores
+        const originalBase = computeBaseHomeRisk(selectedHome, marinaRisk).baseRisk;
+        const modifiedBase = computeBaseHomeRisk(modified, marinaRisk).baseRisk;
+        const difference = modifiedBase - originalBase;
+        
+        // Show impact
+        const impactEl = document.getElementById('whatIfImpact');
+        if (difference === 0) {
+            impactEl.innerHTML = 'No changes made. Your risk score remains the same.';
+        } else {
+            const color = difference > 0 ? '#ef4444' : '#10b981';
+            const arrow = difference > 0 ? '↑' : '↓';
+            const verb = difference > 0 ? 'increases' : 'decreases';
+            impactEl.innerHTML = `<div style="color: ${color}; font-weight: 600;">${arrow} Risk score ${verb} by ${Math.abs(difference)} points</div>` +
+                `<div style="margin-top: 6px;">Original: <strong>${originalBase}</strong> → Modified: <strong>${modifiedBase}</strong></div>`;
+        }
+        
+        updateHomePanel(modified);
+    }
+
+    // ============================================
+    // MAP
+    // ============================================
+    async function initMap() {
+        map = L.map('map', { center: [37.7649, -122.4350], zoom: 12.5, zoomControl: true });
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(map);
+
+        try {
+            sfNeighborhoods = await (await fetch('SanFrancisco.Neighborhoods.json')).json();
+        } catch(e) { console.error('Failed to load neighborhoods'); }
+
+        try {
+            const data = await (await fetch('Marina_Buildings.geojson')).json();
+            processedHomes = processBuildings(data);
+            console.log(`Loaded ${processedHomes.length} buildings`);
+        } catch(e) { console.error('Failed to load buildings'); }
+
+        if (sfNeighborhoods?.features) {
+            geojsonLayer = L.geoJSON(sfNeighborhoods, {
+                style: f => {
+                    const name = f.properties.neighborhood || f.properties.nhood;
+                    const risk = neighborhoodRiskData[name]?.overallRisk || 50;
+                    return { fillColor: getRiskColor(risk), fillOpacity: 0.5, color: '#fff', weight: 0.5, opacity: 0.6 };
+                },
+                onEachFeature: (f, layer) => {
+                    const name = f.properties.neighborhood || f.properties.nhood;
+                    const riskData = neighborhoodRiskData[name] || { 
+                        name: name, 
+                        risks: { seismic: 50, liquefaction: 50, tsunami: 30, infrastructure: 50, displacement: 50, property: 50 }, 
+                        overallRisk: 47, 
+                        summary: "Risk assessment data for this neighborhood." 
+                    };
+                    
+                    // Store default data if not exists
+                    if (!neighborhoodRiskData[name]) {
+                        neighborhoodRiskData[name] = riskData;
+                    }
+                    
+                    // Popup with basic info
+                    layer.bindPopup(`
+                        <div style="min-width: 180px;">
+                            <div style="font-weight: 600; font-size: 1rem; margin-bottom: 6px;">${name}</div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: ${getRiskColor(riskData.overallRisk)}">${riskData.overallRisk}</span>
+                                <span style="font-size: 0.8rem; color: #a0a0b0;">/100 ${getRiskLabel(riskData.overallRisk)}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #a0a0b0; line-height: 1.4;">${riskData.summary || ''}</div>
+                            ${name === 'Marina' ? '<div style="margin-top: 8px; font-size: 0.7rem; color: #6366f1; font-weight: 500;">Click to explore building-level data →</div>' : ''}
+                        </div>
+                    `);
+                    
+                    layer.on('click', () => {
+                        showNeighborhood(name);
+                    });
+                    
+                    layer.on('mouseover', () => {
+                        // Don't change style if Marina is showing buildings
+                        if (name === 'Marina' && marinaShowingBuildings) return;
+                        layer.setStyle({ fillOpacity: 0.6, weight: 2 });
+                    });
+                    
+                    layer.on('mouseout', () => {
+                        // Don't change style if Marina is showing buildings
+                        if (name === 'Marina' && marinaShowingBuildings) return;
+                        const risk = neighborhoodRiskData[name]?.overallRisk || 50;
+                        layer.setStyle({ fillColor: getRiskColor(risk), fillOpacity: 0.5, color: '#fff', weight: 0.5, opacity: 0.6 });
+                    });
+                }
+            }).addTo(map);
+        }
+
+        addBuildingMarkers();
+        // Don't auto-show Marina - let user click
+    }
+
+    function addBuildingMarkers() {
+        if (!processedHomes.length) return;
+        
+        // Create GeoJSON features from processed homes
+        const geojsonData = {
+            type: "FeatureCollection",
+            features: processedHomes.map(home => ({
+                type: "Feature",
+                geometry: home.geometry,
+                properties: { ...home }
+            }))
+        };
+        
+        // Create GeoJSON layer with actual building footprints
+        buildingsLayer = L.geoJSON(geojsonData, {
+            style: (feature) => {
+                const home = feature.properties;
+                const risk = computeBaseHomeRisk(home, marinaRisk).baseRisk;
+                return {
+                    fillColor: getRiskColor(risk),
+                    fillOpacity: 0.7,
+                    color: '#fff',
+                    weight: 0.5,
+                    opacity: 0.8
+                };
+            },
+            onEachFeature: (feature, layer) => {
+                const home = feature.properties;
+                layer.on('click', () => selectHome(home));
+                layer.on('mouseover', () => {
+                    layer.setStyle({ weight: 2, color: '#6366f1', fillOpacity: 0.85 });
+                });
+                layer.on('mouseout', () => {
+                    // Don't reset style if this is the selected building
+                    if (!selectedHome || selectedHome.id !== home.id) {
+                        layer.setStyle({ weight: 0.5, color: '#fff', fillOpacity: 0.7 });
+                    }
+                });
+            }
+        });
+        
+        // Don't add buildings to map initially - only when Marina is clicked
+    }
+
+    function showNeighborhood(name) {
+        const data = neighborhoodRiskData[name];
+        if (!data) return;
+        
+        document.getElementById('step1').classList.add('completed');
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+        document.getElementById('conn1').classList.add('completed');
+        document.getElementById('welcomeState').classList.add('hidden');
+        document.getElementById('neighborhoodCard').classList.remove('hidden');
+        
+        // Update hero section label
+        document.getElementById('heroNeighborhood').textContent = name === 'Marina' ? 'Marina District — Highest Risk' : name + ' District';
+        
+        updateNeighborhoodPanel({ ...data, name });
+        
+        // Only show building markers and home cards for Marina
+        const heroNote = document.getElementById('heroNote');
+        if (name === 'Marina') {
+            marinaShowingBuildings = true; // Set flag
+            if (buildingsLayer) buildingsLayer.addTo(map);
+            heroNote.classList.add('hidden');
+            
+            // Make Marina neighborhood semi-transparent to highlight building data
+            if (geojsonLayer) {
+                geojsonLayer.eachLayer(layer => {
+                    const layerName = layer.feature.properties.neighborhood || layer.feature.properties.nhood;
+                    if (layerName === 'Marina') {
+                        const marinaRiskColor = getRiskColor(marinaRisk.overallRisk);
+                        layer.setStyle({ fillColor: marinaRiskColor, fillOpacity: 0.2, weight: 2, color: '#6366f1', opacity: 0.8 });
+                    }
+                });
+            }
+            
+            map.flyTo([37.803, -122.435], 15, { duration: 1 });
+        } else {
+            marinaShowingBuildings = false; // Clear flag
+            if (buildingsLayer) map.removeLayer(buildingsLayer);
+            heroNote.classList.remove('hidden');
+            
+            // Reset all neighborhood styles to normal
+            if (geojsonLayer) {
+                geojsonLayer.eachLayer(layer => {
+                    const layerName = layer.feature.properties.neighborhood || layer.feature.properties.nhood;
+                    const risk = neighborhoodRiskData[layerName]?.overallRisk || 50;
+                    layer.setStyle({ fillColor: getRiskColor(risk), fillOpacity: 0.5, color: '#fff', weight: 0.5, opacity: 0.6 });
+                });
+            }
+            
+            // Hide home-level cards for non-Marina neighborhoods
+            document.getElementById('homeCard').classList.add('hidden');
+            document.getElementById('step2').classList.remove('completed');
+            document.getElementById('step3').classList.remove('active', 'completed');
+            document.getElementById('conn2').classList.remove('completed');
+            selectedHome = null;
+        if (userMarker) { map.removeLayer(userMarker); userMarker = null; }
+            if (neighborCircle) { map.removeLayer(neighborCircle); neighborCircle = null; }
+        }
+    }
+    
+    function showMarina() {
+        showNeighborhood('Marina');
+    }
+
+    function selectHome(home) {
+        selectedHome = home;
+
+        document.getElementById('step2').classList.add('completed');
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+        document.getElementById('step3').classList.add('completed');
+        document.getElementById('conn2').classList.add('completed');
+
+        document.getElementById('homeCard').classList.remove('hidden');
+        document.getElementById('searchInput').value = home.address;
+
+        // Reset all building styles and highlight the selected one
+        if (buildingsLayer) {
+            buildingsLayer.eachLayer(layer => {
+                const layerHome = layer.feature.properties;
+                const risk = computeBaseHomeRisk(layerHome, marinaRisk).baseRisk;
+                if (layerHome.id === home.id) {
+                    // Highlight selected building
+                    layer.setStyle({
+                        fillColor: getRiskColor(risk),
+                        fillOpacity: 0.9,
+                        color: '#6366f1',
+                        weight: 3,
+                        opacity: 1
+                    });
+                    layer.bringToFront();
+                } else {
+                    // Reset other buildings
+                    layer.setStyle({
+                        fillColor: getRiskColor(risk),
+                        fillOpacity: 0.7,
+                        color: '#fff',
+                        weight: 0.5,
+                        opacity: 0.8
+                    });
+                }
+            });
+        }
+
+        if (userMarker) map.removeLayer(userMarker);
+        userMarker = L.marker([home.lat, home.lng], { icon: L.divIcon({ html: '📍', className: '', iconSize: [24, 24], iconAnchor: [12, 24] }) }).addTo(map);
+
+        if (neighborCircle) map.removeLayer(neighborCircle);
+        neighborCircle = L.circle([home.lat, home.lng], { radius: 150, color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: 0.08, weight: 1, dashArray: '4', interactive: false }).addTo(map);
+
+        // Ensure buildings layer is on top so clicks work
+        if (buildingsLayer && map.hasLayer(buildingsLayer)) {
+            buildingsLayer.bringToFront();
+        }
+
+        updateHomePanel(home);
+        map.flyTo([home.lat, home.lng], 17.5, { duration: 0.5 });
+
+        setTimeout(() => document.getElementById('homeCard').scrollIntoView({ behavior: 'smooth' }), 300);
+    }
+
+    // ============================================
+    // SEARCH
+    // ============================================
+    function initSearch() {
+        const input = document.getElementById('searchInput');
+        const dropdown = document.getElementById('searchDropdown');
+
+        input.addEventListener('input', e => {
+            const q = e.target.value.toLowerCase().trim();
+            if (q.length < 2) { dropdown.classList.remove('show'); return; }
+
+            const matches = processedHomes.filter(h => h.address.toLowerCase().includes(q)).slice(0, 8);
+            if (matches.length) {
+                dropdown.innerHTML = matches.map(h => {
+                    const risk = computeBaseHomeRisk(h, marinaRisk).baseRisk;
+                    return `<div class="search-item" data-id="${h.id}"><div class="search-item-address"><span class="risk-dot" style="background:${getRiskColor(risk)}"></span>${h.address}</div><div class="search-item-meta">Marina · Risk: ${risk}/100</div></div>`;
+                }).join('');
+                dropdown.classList.add('show');
+                dropdown.querySelectorAll('.search-item').forEach(el => el.addEventListener('click', () => {
+                    const home = processedHomes.find(h => h.id === el.dataset.id);
+                    if (home) { dropdown.classList.remove('show'); showMarina(); selectHome(home); }
+                }));
+            } else {
+                dropdown.innerHTML = '<div class="search-item"><div class="search-item-address">No results found</div></div>';
+                dropdown.classList.add('show');
+            }
+        });
+
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') dropdown.querySelector('.search-item[data-id]')?.click(); });
+        document.addEventListener('click', e => { if (!e.target.closest('.search-container')) dropdown.classList.remove('show'); });
+    }
+
+    // ============================================
+    // TABS & FORM
+    // ============================================
+    function initTabs() {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+    }
+
+    function initForm() {
+        ['editYear', 'editFloors', 'editMaterial'].forEach(id => document.getElementById(id).addEventListener('change', recalculate));
+        document.getElementById('editRetrofit').addEventListener('click', function() { this.classList.toggle('active'); recalculate(); });
+        document.getElementById('editSoftStory').addEventListener('click', function() { this.classList.toggle('active'); recalculate(); });
+        
+        // Reset button
+        document.getElementById('resetButton').addEventListener('click', () => {
+            if (selectedHome) {
+                updateFormFromHome(selectedHome);
+                recalculate();
+            }
+        });
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+        initMap();
+        initSearch();
+        initTabs();
+        initForm();
+    });
+    </script>
+</body>
+</html>
