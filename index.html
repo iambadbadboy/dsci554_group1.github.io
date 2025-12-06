@@ -1472,374 +1472,6 @@
             font-size: 1.2rem;
         }
 
-        /* ============================================
-           FIRST RESPONDER TRAINING SYSTEM
-           ============================================ */
-        
-        /* Decision Prompt Overlay */
-        .decision-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 1800;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        
-        .decision-overlay.visible {
-            display: flex;
-            animation: fadeIn 0.25s ease;
-        }
-        
-        .decision-modal {
-            background: #1a1d24;
-            border-radius: 16px;
-            max-width: 520px;
-            width: 92%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.3);
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.3); }
-            50% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.4); }
-        }
-        
-        .decision-header {
-            padding: 20px 24px;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%);
-            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 16px 16px 0 0;
-        }
-        
-        .decision-header h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #f87171;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .decision-timer {
-            background: rgba(239, 68, 68, 0.2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #f87171;
-        }
-        
-        .decision-timer.urgent {
-            animation: timerPulse 0.5s ease-in-out infinite;
-            background: rgba(239, 68, 68, 0.4);
-        }
-        
-        @keyframes timerPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        
-        .decision-body {
-            padding: 24px;
-        }
-        
-        .decision-situation {
-            background: #0f1115;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-left: 4px solid #f87171;
-        }
-        
-        .decision-situation-title {
-            font-size: 0.8rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 8px;
-        }
-        
-        .decision-situation-text {
-            font-size: 0.95rem;
-            color: #e2e8f0;
-            line-height: 1.5;
-        }
-        
-        .decision-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .decision-option {
-            background: #0f1115;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .decision-option:hover {
-            border-color: rgba(99, 102, 241, 0.5);
-            background: rgba(99, 102, 241, 0.1);
-        }
-        
-        .decision-option-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        
-        .decision-option-icon {
-            font-size: 1.5rem;
-        }
-        
-        .decision-option-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f8fafc;
-        }
-        
-        .decision-option-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-        
-        .decision-option-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .decision-option-impact {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            padding-left: 40px;
-        }
-        
-        /* Resource Panel */
-        .resource-panel {
-            background: var(--bg-base);
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-        
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        
-        .resource-item {
-            background: #0f1115;
-            border-radius: 8px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        
-        .resource-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .resource-item-name {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .resource-item-count {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #f8fafc;
-        }
-        
-        .resource-item-count.low {
-            color: #f87171;
-        }
-        
-        .resource-bar {
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .resource-bar-fill {
-            height: 100%;
-            background: #4ade80;
-            transition: width 0.3s ease;
-        }
-        
-        .resource-bar-fill.medium {
-            background: #fbbf24;
-        }
-        
-        .resource-bar-fill.low {
-            background: #f87171;
-        }
-        
-        /* Outcome Tracking */
-        .outcome-panel {
-            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(99,102,241,0.02) 100%);
-            border: 1px solid rgba(99,102,241,0.2);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .outcome-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #818cf8;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .outcome-metrics {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .outcome-metric {
-            text-align: center;
-        }
-        
-        .outcome-metric-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #f8fafc;
-            line-height: 1;
-        }
-        
-        .outcome-metric-value.positive {
-            color: #4ade80;
-        }
-        
-        .outcome-metric-value.negative {
-            color: #f87171;
-        }
-        
-        .outcome-metric-label {
-            font-size: 0.7rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 4px;
-        }
-        
-        .outcome-bar-container {
-            margin-top: 16px;
-        }
-        
-        .outcome-bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-bottom: 6px;
-        }
-        
-        .outcome-bar {
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .outcome-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        /* Deployed Units List */
-        .deployed-list {
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        
-        .deployed-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            background: #0f1115;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
-        }
-        
-        .deployed-item-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #cbd5e1;
-        }
-        
-        .deployed-item-status {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .deployed-item-status.enroute {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-        }
-        
-        .deployed-item-status.onscene {
-            background: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-        }
-        
-        .deployed-item-status.returning {
-            background: rgba(148, 163, 184, 0.2);
-            color: #94a3b8;
-        }
-        
-        /* Unit Markers on Map */
-        .unit-marker-container {
-            background: transparent !important;
-            border: none !important;
-        }
-        
-        @keyframes unitPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-            50% { transform: scale(1.1); box-shadow: 0 4px 16px rgba(74, 222, 128, 0.5); }
-        }
-        
-        .deployed-unit-marker.onscene {
-            animation: unitPulse 1.5s ease-in-out infinite;
-        }
-
         /* Post-Disaster Summary Modal */
         .summary-overlay {
             position: fixed;
@@ -2641,114 +2273,26 @@
                         </div>
                     </div>
                     
-                    <!-- Response Outcome Tracking -->
-                    <div class="card" id="outcomeCard">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <span class="card-title-icon">📊</span>
-                                Response Effectiveness
-                            </div>
-                        </div>
-                        <div class="card-body" style="padding: 16px;">
-                            <div class="outcome-panel">
-                                <div class="outcome-title">
-                                    <span>🎯</span> Live Outcome Metrics
-                                </div>
-                                <div class="outcome-metrics">
-                                    <div class="outcome-metric">
-                                        <div class="outcome-metric-value positive" id="livesSaved">0</div>
-                                        <div class="outcome-metric-label">Lives Saved</div>
-                                    </div>
-                                    <div class="outcome-metric">
-                                        <div class="outcome-metric-value" id="estCasualties">--</div>
-                                        <div class="outcome-metric-label">Est. Casualties</div>
-                                    </div>
-                                    <div class="outcome-metric">
-                                        <div class="outcome-metric-value" id="buildingsCleared">0</div>
-                                        <div class="outcome-metric-label">Buildings Cleared</div>
-                                    </div>
-                                    <div class="outcome-metric">
-                                        <div class="outcome-metric-value" id="peopleEvacuated">0</div>
-                                        <div class="outcome-metric-label">Evacuated</div>
-                                    </div>
-                                </div>
-                                <div class="outcome-bar-container">
-                                    <div class="outcome-bar-label">
-                                        <span>Response Score</span>
-                                        <span id="responseScoreValue">0%</span>
-                                    </div>
-                                    <div class="outcome-bar">
-                                        <div class="outcome-bar-fill" id="responseScoreBar" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Available Resources -->
-                    <div class="card" id="resourceCard">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <span class="card-title-icon">📦</span>
-                                Available Resources
-                            </div>
-                        </div>
-                        <div class="card-body" style="padding: 16px;">
-                            <div class="resource-grid" id="resourceGrid">
-                                <div class="resource-item">
-                                    <div class="resource-item-header">
-                                        <span class="resource-item-name">🚑 Ambulances</span>
-                                        <span class="resource-item-count" id="resAmbulance">8/10</span>
-                                    </div>
-                                    <div class="resource-bar"><div class="resource-bar-fill" id="resAmbulanceBar" style="width: 80%;"></div></div>
-                                </div>
-                                <div class="resource-item">
-                                    <div class="resource-item-header">
-                                        <span class="resource-item-name">🚁 Helicopters</span>
-                                        <span class="resource-item-count" id="resHeli">3/4</span>
-                                    </div>
-                                    <div class="resource-bar"><div class="resource-bar-fill" id="resHeliBar" style="width: 75%;"></div></div>
-                                </div>
-                                <div class="resource-item">
-                                    <div class="resource-item-header">
-                                        <span class="resource-item-name">🚒 Fire Units</span>
-                                        <span class="resource-item-count" id="resFire">6/8</span>
-                                    </div>
-                                    <div class="resource-bar"><div class="resource-bar-fill" id="resFireBar" style="width: 75%;"></div></div>
-                                </div>
-                                <div class="resource-item">
-                                    <div class="resource-item-header">
-                                        <span class="resource-item-name">👥 SAR Teams</span>
-                                        <span class="resource-item-count" id="resSAR">5/6</span>
-                                    </div>
-                                    <div class="resource-bar"><div class="resource-bar-fill" id="resSARBar" style="width: 83%;"></div></div>
-                                </div>
-                            </div>
-                            
-                            <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Deployed Units</div>
-                                <div class="deployed-list" id="deployedList">
-                                    <div style="text-align: center; padding: 12px; color: #64748b; font-size: 0.8rem;">
-                                        No units deployed yet
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Emergency Guidance (Simplified) -->
+                    <!-- Emergency Guidance -->
                     <div class="card" id="guidanceCard">
                         <div class="card-header">
                             <div class="card-title">
                                 <span class="card-title-icon">📢</span>
-                                Situation Briefing
+                                Emergency Guidance
                             </div>
                         </div>
                         <div class="card-body">
                             <div id="emergencyGuidance">
+                                <div style="padding: 10px; background: var(--bg-base); border-radius: 8px; margin-bottom: 10px;">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 6px; font-size: 0.85rem;">👥 For Civilians</div>
+                                    <div id="civilianGuidance" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                                        Simulation not started
+                                    </div>
+                                </div>
                                 <div style="padding: 10px; background: var(--bg-base); border-radius: 8px;">
-                                    <div id="responderGuidance" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
-                                        Press ▶️ to start simulation. Decision prompts will appear as the scenario unfolds.
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 6px; font-size: 0.85rem;">🚒 For First Responders</div>
+                                    <div id="responderGuidance" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                                        Simulation not started
                                     </div>
                                 </div>
                             </div>
@@ -2969,27 +2513,6 @@
         </div>
     </div>
 
-    <!-- Decision Prompt Modal -->
-    <div class="decision-overlay" id="decisionOverlay">
-        <div class="decision-modal" id="decisionModal">
-            <div class="decision-header">
-                <h3><span>🚨</span> <span id="decisionTitle">DECISION REQUIRED</span></h3>
-                <div class="decision-timer" id="decisionTimer">⏱️ 0:30</div>
-            </div>
-            <div class="decision-body">
-                <div class="decision-situation">
-                    <div class="decision-situation-title">Current Situation</div>
-                    <div class="decision-situation-text" id="decisionSituation">
-                        Loading situation...
-                    </div>
-                </div>
-                <div class="decision-options" id="decisionOptions">
-                    <!-- Options populated dynamically -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
     // ============================================
@@ -3034,204 +2557,6 @@
     
     // Post-disaster summary state
     let summaryShown = false;
-    
-    // ============================================
-    // FIRST RESPONDER TRAINING SYSTEM
-    // ============================================
-    
-    // Resources state
-    let resources = {
-        ambulances: { available: 10, total: 10 },
-        helicopters: { available: 4, total: 4 },
-        fireUnits: { available: 8, total: 8 },
-        sarTeams: { available: 6, total: 6 }
-    };
-    
-    // Deployed units tracking
-    let deployedUnits = [];
-    let deployedUnitMarkers = {}; // Map markers for deployed units
-    
-    // Outcome tracking
-    let outcomeMetrics = {
-        livesSaved: 0,
-        estimatedCasualties: 0,
-        buildingsCleared: 0,
-        peopleEvacuated: 0,
-        responseScore: 0,
-        decisionsCorrect: 0,
-        decisionsTotal: 0
-    };
-    
-    // Decision system state
-    let pendingDecisions = [];
-    let decisionHistory = [];
-    let currentDecision = null;
-    let decisionTimerId = null;
-    let triggeredDecisions = new Set();
-    
-    // Decision definitions for scenarios
-    const scenarioDecisions = {
-        offshore_tsunami: [
-            {
-                id: 'initial_response',
-                triggerTime: 15,
-                title: 'INITIAL DEPLOYMENT',
-                situation: 'M8.0 earthquake detected offshore. Shaking felt across the Bay Area. Reports of structural damage coming in from Marina District.',
-                options: [
-                    {
-                        id: 'deploy_all',
-                        icon: '🚀',
-                        title: 'Full Immediate Response',
-                        meta: { eta: '5-8 min', units: 'All available' },
-                        impact: 'Deploy all SAR teams and fire units to Marina immediately',
-                        effect: { livesSaved: 45, resourceCost: { sarTeams: 4, fireUnits: 5 }, score: 20 }
-                    },
-                    {
-                        id: 'staged_response',
-                        icon: '📍',
-                        title: 'Staged Response',
-                        meta: { eta: '3-5 min', units: '50% initially' },
-                        impact: 'Send half now, keep reserves for developing situations',
-                        effect: { livesSaved: 30, resourceCost: { sarTeams: 2, fireUnits: 3 }, score: 15 }
-                    },
-                    {
-                        id: 'assess_first',
-                        icon: '🔍',
-                        title: 'Assess Before Deploying',
-                        meta: { eta: '10-15 min', units: 'Recon only' },
-                        impact: 'Send aerial reconnaissance first, then deploy based on findings',
-                        effect: { livesSaved: 15, resourceCost: { helicopters: 1 }, score: 5 }
-                    }
-                ],
-                timeLimit: 30,
-                optimalChoice: 'deploy_all'
-            },
-            {
-                id: 'tsunami_warning',
-                triggerTime: 495, // Just after tsunami warning
-                title: 'TSUNAMI EVACUATION DECISION',
-                situation: 'Tsunami warning issued! Wave ETA 7 minutes. SAR teams currently operating in coastal collapse sites with potential trapped survivors.',
-                options: [
-                    {
-                        id: 'evacuate_all',
-                        icon: '🏃',
-                        title: 'Immediate Full Evacuation',
-                        meta: { eta: 'Now', risk: 'Abandon active rescues' },
-                        impact: 'Pull all teams to high ground immediately. Abandon in-progress rescues.',
-                        effect: { livesSaved: -20, teamsSaved: 6, evacuated: 500, score: 25 }
-                    },
-                    {
-                        id: 'continue_rescue',
-                        icon: '⛑️',
-                        title: 'Continue Critical Rescues',
-                        meta: { eta: '5 min', risk: 'Teams in danger zone' },
-                        impact: 'Complete extractions in progress, then evacuate. High risk to teams.',
-                        effect: { livesSaved: 35, teamsAtRisk: 3, evacuated: 200, score: 10 }
-                    },
-                    {
-                        id: 'split_teams',
-                        icon: '↔️',
-                        title: 'Split Operations',
-                        meta: { eta: '3 min', risk: 'Moderate' },
-                        impact: 'Half continue rescue, half assist civilian evacuation',
-                        effect: { livesSaved: 15, teamsSaved: 3, evacuated: 350, score: 18 }
-                    }
-                ],
-                timeLimit: 20,
-                optimalChoice: 'split_teams'
-            },
-            {
-                id: 'post_tsunami',
-                triggerTime: 1260, // After tsunami recedes
-                title: 'POST-TSUNAMI OPERATIONS',
-                situation: 'Tsunami has receded. Extensive water damage visible. Multiple buildings now showing additional collapse. Resources are depleted.',
-                options: [
-                    {
-                        id: 'sar_priority',
-                        icon: '🔍',
-                        title: 'Prioritize Search & Rescue',
-                        meta: { focus: 'Trapped survivors', duration: '2+ hours' },
-                        impact: 'Focus all remaining teams on collapsed structures',
-                        effect: { livesSaved: 40, buildingsCleared: 15, score: 22 }
-                    },
-                    {
-                        id: 'medical_priority',
-                        icon: '🏥',
-                        title: 'Prioritize Medical Response',
-                        meta: { focus: 'Injured civilians', duration: '1-2 hours' },
-                        impact: 'Set up triage stations, treat walking wounded first',
-                        effect: { livesSaved: 25, treated: 150, score: 18 }
-                    },
-                    {
-                        id: 'infrastructure',
-                        icon: '🔧',
-                        title: 'Secure Infrastructure',
-                        meta: { focus: 'Gas/fire hazards', duration: '1 hour' },
-                        impact: 'Coordinate with utilities to prevent secondary disasters',
-                        effect: { livesSaved: 10, hazardsPrevented: 8, score: 12 }
-                    }
-                ],
-                timeLimit: 45,
-                optimalChoice: 'sar_priority'
-            }
-        ],
-        hayward: [
-            {
-                id: 'hayward_initial',
-                triggerTime: 10,
-                title: 'EARTHQUAKE RESPONSE',
-                situation: 'M7.2 earthquake on Hayward Fault. Major damage reports across East Bay and Marina District. Multiple collapse sites identified.',
-                options: [
-                    {
-                        id: 'concentrate_marina',
-                        icon: '📍',
-                        title: 'Concentrate on Marina',
-                        meta: { eta: '5 min', coverage: 'Marina only' },
-                        impact: 'Focus all resources on known high-risk Marina district',
-                        effect: { livesSaved: 50, score: 22 }
-                    },
-                    {
-                        id: 'distribute_wide',
-                        icon: '🌐',
-                        title: 'Distribute Widely',
-                        meta: { eta: '8-12 min', coverage: 'Multiple areas' },
-                        impact: 'Spread teams across all affected neighborhoods',
-                        effect: { livesSaved: 35, score: 15 }
-                    }
-                ],
-                timeLimit: 30,
-                optimalChoice: 'concentrate_marina'
-            }
-        ],
-        marina_local: [
-            {
-                id: 'local_initial',
-                triggerTime: 10,
-                title: 'LOCAL EVENT RESPONSE',
-                situation: 'M5.8 earthquake centered in Marina. Moderate damage to older buildings. Some structural collapses reported.',
-                options: [
-                    {
-                        id: 'standard_response',
-                        icon: '🚒',
-                        title: 'Standard Protocol Response',
-                        meta: { eta: '5 min', units: '3 teams' },
-                        impact: 'Deploy standard earthquake response package',
-                        effect: { livesSaved: 20, score: 18 }
-                    },
-                    {
-                        id: 'elevated_response',
-                        icon: '⬆️',
-                        title: 'Elevated Response',
-                        meta: { eta: '4 min', units: '5 teams' },
-                        impact: 'Deploy additional resources given Marina vulnerability',
-                        effect: { livesSaved: 30, score: 22 }
-                    }
-                ],
-                timeLimit: 25,
-                optimalChoice: 'elevated_response'
-            }
-        ]
-    };
     
     // ============================================
     // SCENARIO DATA
@@ -4300,9 +3625,6 @@
         document.getElementById('assessmentSidebarContent').style.display = mode === 'assessment' ? 'block' : 'none';
         document.getElementById('simSidebarContent').classList.toggle('visible', mode === 'simulation');
         
-        // Hide progress steps bar in simulation mode (not relevant)
-        document.querySelector('.progress-bar').style.display = mode === 'assessment' ? 'flex' : 'none';
-        
         // Toggle map overlays
         document.getElementById('riskLegend').style.display = mode === 'assessment' ? 'block' : 'none';
         document.getElementById('damageLegend').style.display = mode === 'simulation' ? 'block' : 'none';
@@ -4428,7 +3750,6 @@
         tsunamiDamagedBuildings = new Set(); // Reset tsunami damage tracking
         triggeredAlerts = new Set(); // Reset triggered alerts so they can fire again
         summaryShown = false; // Allow summary to show again
-        resetResponseSystem(); // Reset first responder training system
         clearShockwaves();
         clearAlerts();
         eventLogEntries = [];
@@ -4535,12 +3856,6 @@
         updateHazardZones(time);
         updateTsunamiVisualization(scenario, time);
         updateEmergencyGuidance(scenario, time);
-        
-        // First Responder Training System
-        checkForDecisions(scenario, time);
-        updateOutcomeDisplay();
-        updateDeployedList();
-        
         checkForSimulationEnd(scenario, time);
     }
     
@@ -5749,34 +5064,29 @@
         const totalBuildings = processedHomes.length;
         const tsunamiDamagedCount = tsunamiDamagedBuildings.size;
         
-        // Update stats with response metrics
+        // Update stats
         document.getElementById('summaryCollapsed').textContent = collapsed;
         document.getElementById('summarySevere').textContent = severe;
-        document.getElementById('summaryModerate').textContent = outcomeMetrics.livesSaved;
-        document.getElementById('summaryIntact').textContent = `${outcomeMetrics.decisionsCorrect}/${outcomeMetrics.decisionsTotal}`;
+        document.getElementById('summaryModerate').textContent = moderate;
+        document.getElementById('summaryIntact').textContent = intact + minor;
+        document.getElementById('summaryScenario').textContent = `${scenario.name} - Response Complete`;
         
-        // Update labels for new metrics
-        document.querySelector('#summaryModal .summary-stat:nth-child(3) .summary-stat-label').textContent = 'Lives Saved';
-        document.querySelector('#summaryModal .summary-stat:nth-child(4) .summary-stat-label').textContent = 'Optimal Decisions';
+        // Generate analysis
+        const responseEffectiveness = calculateResponseEffectiveness(collapsed, severe, totalBuildings);
         
-        // Update header
-        const decisionScore = outcomeMetrics.decisionsTotal > 0 
-            ? Math.round((outcomeMetrics.decisionsCorrect / outcomeMetrics.decisionsTotal) * 100) 
-            : 0;
-        document.getElementById('summaryScenario').textContent = `${scenario.name} — Response Score: ${outcomeMetrics.responseScore}pts`;
-        
-        // Generate analysis including decision review
+        // Populate What Worked Well
         const positives = generatePositives(scenario, collapsed, severe, tsunamiDamagedCount, totalBuildings);
         document.getElementById('summaryPositives').innerHTML = positives.map(p => 
             `<li class="positive"><span class="icon">${p.icon}</span>${p.text}</li>`
         ).join('');
         
+        // Populate Areas for Improvement
         const negatives = generateNegatives(scenario, collapsed, severe, tsunamiDamagedCount, totalBuildings);
         document.getElementById('summaryNegatives').innerHTML = negatives.map(n => 
             `<li class="negative"><span class="icon">${n.icon}</span>${n.text}</li>`
         ).join('');
         
-        // Generate decision-based actions
+        // Populate Immediate Actions
         const actions = generateActions(collapsed, severe, tsunamiDamagedCount > 0);
         document.getElementById('summaryActions').innerHTML = actions.map(a => `
             <div class="summary-action-card">
@@ -5800,42 +5110,32 @@
         const positives = [];
         const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
         const collapsedPercent = (collapsed / total) * 100;
+        const severePercent = (severe / total) * 100;
         
-        // Decision-based positives
-        const optimalDecisions = decisionHistory.filter(d => d.wasOptimal);
-        if (optimalDecisions.length > 0) {
-            positives.push({
-                icon: '✅',
-                text: `Made ${optimalDecisions.length} optimal decision${optimalDecisions.length > 1 ? 's' : ''} — ${optimalDecisions.map(d => d.option.title).join(', ')}`
-            });
-        }
-        
-        if (outcomeMetrics.livesSaved > 30) {
-            positives.push({
-                icon: '💚',
-                text: `Saved ${outcomeMetrics.livesSaved} lives through rapid response decisions`
-            });
-        }
-        
-        if (outcomeMetrics.peopleEvacuated > 200) {
-            positives.push({
-                icon: '🏃',
-                text: `Successfully evacuated ${outcomeMetrics.peopleEvacuated} people from danger zones`
-            });
-        }
-        
-        // Scenario-based positives
+        // Always include some positives based on scenario
         if (collapsedPercent < 15) {
             positives.push({
                 icon: '🏗️',
-                text: `${(100 - collapsedPercent).toFixed(0)}% of buildings avoided collapse`
+                text: `${(100 - collapsedPercent).toFixed(0)}% of buildings avoided collapse — structural codes and retrofitting appear effective`
             });
         }
         
         if (hasTsunami && tsunamiDamaged < total * 0.5) {
             positives.push({
                 icon: '🌊',
-                text: `Tsunami damage contained to ${tsunamiDamaged} structures`
+                text: `Tsunami damage limited to ${tsunamiDamaged} buildings — evacuation routes helped minimize exposure`
+            });
+        }
+        
+        positives.push({
+            icon: '⏱️',
+            text: 'Early warning systems provided advance notice for evacuations and preparation'
+        });
+        
+        if (severePercent < 25) {
+            positives.push({
+                icon: '🚒',
+                text: 'Emergency facilities remained operational — enabling rapid response deployment'
             });
         }
         
@@ -5852,44 +5152,36 @@
         const hasTsunami = scenario.events.some(e => e.type === 'tsunami');
         const collapsedPercent = (collapsed / total) * 100;
         
-        // Decision-based negatives
-        const suboptimalDecisions = decisionHistory.filter(d => !d.wasOptimal);
-        if (suboptimalDecisions.length > 0) {
-            suboptimalDecisions.forEach(d => {
-                negatives.push({
-                    icon: '❌',
-                    text: `"${d.option.title}" was not optimal — consider ${scenarioDecisions[currentScenario]?.find(sd => sd.id === d.decisionId)?.options.find(o => o.id === scenarioDecisions[currentScenario]?.find(sd => sd.id === d.decisionId)?.optimalChoice)?.title || 'alternative approach'}`
-                });
-            });
-        }
-        
-        const timedOutDecisions = decisionHistory.filter(d => d.timedOut);
-        if (timedOutDecisions.length > 0) {
-            negatives.push({
-                icon: '⏱️',
-                text: `${timedOutDecisions.length} decision${timedOutDecisions.length > 1 ? 's' : ''} timed out — faster decision-making needed in crisis situations`
-            });
-        }
-        
-        if (outcomeMetrics.livesSaved < 20 && outcomeMetrics.decisionsTotal > 0) {
-            negatives.push({
-                icon: '💔',
-                text: `Only ${outcomeMetrics.livesSaved} lives saved — review deployment timing and resource allocation`
-            });
-        }
-        
-        // Scenario-based negatives
         if (collapsedPercent > 5) {
             negatives.push({
                 icon: '🏚️',
-                text: `${collapsed} buildings collapsed — high-risk structures need priority inspection`
+                text: `${collapsed} buildings collapsed — review building codes for older structures and soft-story buildings`
             });
         }
         
         if (hasTsunami && tsunamiDamaged > 10) {
             negatives.push({
                 icon: '🌊',
-                text: `${tsunamiDamaged} structures sustained tsunami damage`
+                text: `${tsunamiDamaged} structures in flood zone sustained water damage — consider updated inundation maps`
+            });
+        }
+        
+        if (severe > 20) {
+            negatives.push({
+                icon: '⚠️',
+                text: `High severe damage count (${severe}) — liquefaction mitigation may need expansion in Marina fill areas`
+            });
+        }
+        
+        negatives.push({
+            icon: '🛣️',
+            text: 'Some evacuation routes were blocked by debris — need redundant route planning'
+        });
+        
+        if (collapsed > 10) {
+            negatives.push({
+                icon: '👥',
+                text: 'Potential trapped occupants in collapsed structures — expand urban search & rescue capacity'
             });
         }
         
@@ -5988,506 +5280,6 @@ Report generated by Quake Risk Assessment Dashboard
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }
-    
-    // ============================================
-    // DECISION SYSTEM
-    // ============================================
-    
-    function checkForDecisions(scenario, time) {
-        const decisions = scenarioDecisions[currentScenario] || [];
-        
-        decisions.forEach(decision => {
-            const decisionKey = `${currentScenario}-${decision.id}`;
-            if (time >= decision.triggerTime && !triggeredDecisions.has(decisionKey) && !currentDecision) {
-                triggeredDecisions.add(decisionKey);
-                showDecision(decision);
-            }
-        });
-    }
-    
-    function showDecision(decision) {
-        currentDecision = decision;
-        pauseSimulation();
-        
-        // Populate modal
-        document.getElementById('decisionTitle').textContent = decision.title;
-        document.getElementById('decisionSituation').textContent = decision.situation;
-        
-        // Build options
-        const optionsContainer = document.getElementById('decisionOptions');
-        optionsContainer.innerHTML = decision.options.map(opt => `
-            <div class="decision-option" onclick="selectDecision('${decision.id}', '${opt.id}')">
-                <div class="decision-option-header">
-                    <span class="decision-option-icon">${opt.icon}</span>
-                    <span class="decision-option-title">${opt.title}</span>
-                </div>
-                <div class="decision-option-meta">
-                    ${opt.meta.eta ? `<span>⏱️ ETA: ${opt.meta.eta}</span>` : ''}
-                    ${opt.meta.units ? `<span>👥 ${opt.meta.units}</span>` : ''}
-                    ${opt.meta.risk ? `<span>⚠️ Risk: ${opt.meta.risk}</span>` : ''}
-                    ${opt.meta.focus ? `<span>🎯 ${opt.meta.focus}</span>` : ''}
-                </div>
-                <div class="decision-option-impact">${opt.impact}</div>
-            </div>
-        `).join('');
-        
-        // Show modal
-        document.getElementById('decisionOverlay').classList.add('visible');
-        
-        // Start timer
-        startDecisionTimer(decision.timeLimit);
-    }
-    
-    function startDecisionTimer(seconds) {
-        let remaining = seconds;
-        updateTimerDisplay(remaining);
-        
-        decisionTimerId = setInterval(() => {
-            remaining--;
-            updateTimerDisplay(remaining);
-            
-            if (remaining <= 10) {
-                document.getElementById('decisionTimer').classList.add('urgent');
-            }
-            
-            if (remaining <= 0) {
-                clearInterval(decisionTimerId);
-                // Auto-select worst option if time runs out
-                if (currentDecision) {
-                    const worstOption = currentDecision.options[currentDecision.options.length - 1];
-                    selectDecision(currentDecision.id, worstOption.id, true);
-                }
-            }
-        }, 1000);
-    }
-    
-    function updateTimerDisplay(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        document.getElementById('decisionTimer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-    
-    function selectDecision(decisionId, optionId, timedOut = false) {
-        if (!currentDecision) return;
-        
-        const decision = currentDecision;
-        const option = decision.options.find(o => o.id === optionId);
-        
-        if (!option) return;
-        
-        // Clear timer
-        if (decisionTimerId) {
-            clearInterval(decisionTimerId);
-            decisionTimerId = null;
-        }
-        
-        // Record decision
-        decisionHistory.push({
-            time: simulationTime,
-            decisionId: decisionId,
-            optionId: optionId,
-            option: option,
-            wasOptimal: optionId === decision.optimalChoice,
-            timedOut: timedOut
-        });
-        
-        // Apply effects
-        applyDecisionEffects(option.effect);
-        
-        // Deploy units based on decision
-        if (option.effect.resourceCost) {
-            deployUnits(option);
-        }
-        
-        // Update metrics
-        outcomeMetrics.decisionsTotal++;
-        if (optionId === decision.optimalChoice) {
-            outcomeMetrics.decisionsCorrect++;
-        }
-        
-        // Log to event log
-        addEventLog(`Decision: ${option.title}`, timedOut ? 'warning' : 'info');
-        
-        // Hide modal
-        document.getElementById('decisionOverlay').classList.remove('visible');
-        document.getElementById('decisionTimer').classList.remove('urgent');
-        currentDecision = null;
-        
-        // Update UI
-        updateOutcomeDisplay();
-        updateResourceDisplay();
-        
-        // Resume simulation
-        setTimeout(() => {
-            playSimulation();
-        }, 500);
-    }
-    
-    function applyDecisionEffects(effect) {
-        if (effect.livesSaved) {
-            outcomeMetrics.livesSaved += effect.livesSaved;
-        }
-        if (effect.evacuated) {
-            outcomeMetrics.peopleEvacuated += effect.evacuated;
-        }
-        if (effect.buildingsCleared) {
-            outcomeMetrics.buildingsCleared += effect.buildingsCleared;
-        }
-        if (effect.score) {
-            outcomeMetrics.responseScore += effect.score;
-        }
-    }
-    
-    function deployUnits(option) {
-        const cost = option.effect.resourceCost || {};
-        
-        // Determine target locations based on damage
-        const targetLocations = getDeploymentTargets();
-        let targetIndex = 0;
-        
-        Object.entries(cost).forEach(([resource, count]) => {
-            if (resources[resource]) {
-                resources[resource].available = Math.max(0, resources[resource].available - count);
-                
-                // Add to deployed list with map positions
-                for (let i = 0; i < count; i++) {
-                    const target = targetLocations[targetIndex % targetLocations.length];
-                    const unit = {
-                        id: `${resource}-${Date.now()}-${i}`,
-                        type: resource,
-                        mission: option.title,
-                        status: 'enroute',
-                        deployedAt: simulationTime,
-                        targetLat: target.lat,
-                        targetLng: target.lng,
-                        // Start from staging area (south of Marina)
-                        currentLat: 37.792 + Math.random() * 0.002,
-                        currentLng: -122.435 + Math.random() * 0.01
-                    };
-                    deployedUnits.push(unit);
-                    
-                    // Add marker to map
-                    addUnitMarkerToMap(unit);
-                    targetIndex++;
-                }
-            }
-        });
-        
-        updateDeployedList();
-    }
-    
-    function getDeploymentTargets() {
-        // Get locations of damaged buildings as targets
-        const targets = [];
-        const collapsed = processedHomes.filter(h => (buildingDamage[h.id] || 0) >= 90);
-        const severe = processedHomes.filter(h => {
-            const d = buildingDamage[h.id] || 0;
-            return d >= 60 && d < 90;
-        });
-        
-        // Prioritize collapsed, then severe
-        collapsed.forEach(h => targets.push({ lat: h.lat, lng: h.lng, priority: 'collapsed' }));
-        severe.forEach(h => targets.push({ lat: h.lat, lng: h.lng, priority: 'severe' }));
-        
-        // If no damage yet, use general Marina locations
-        if (targets.length === 0) {
-            targets.push(
-                { lat: 37.802, lng: -122.437, priority: 'staging' },
-                { lat: 37.803, lng: -122.432, priority: 'staging' },
-                { lat: 37.801, lng: -122.440, priority: 'staging' },
-                { lat: 37.804, lng: -122.428, priority: 'staging' }
-            );
-        }
-        
-        return targets;
-    }
-    
-    function addUnitMarkerToMap(unit) {
-        const icons = {
-            ambulances: { emoji: '🚑', color: '#ef4444', label: 'Ambulance' },
-            helicopters: { emoji: '🚁', color: '#8b5cf6', label: 'Helicopter' },
-            fireUnits: { emoji: '🚒', color: '#f97316', label: 'Fire Unit' },
-            sarTeams: { emoji: '👥', color: '#3b82f6', label: 'SAR Team' }
-        };
-        
-        const iconConfig = icons[unit.type] || { emoji: '📍', color: '#6b7280', label: 'Unit' };
-        
-        const icon = L.divIcon({
-            html: `<div class="deployed-unit-marker ${unit.status}" style="
-                background: ${iconConfig.color};
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                border: 3px solid white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-                transition: all 0.3s ease;
-            ">${iconConfig.emoji}</div>`,
-            className: 'unit-marker-container',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-        });
-        
-        const marker = L.marker([unit.currentLat, unit.currentLng], { icon })
-            .addTo(map)
-            .bindPopup(`
-                <div style="min-width: 120px;">
-                    <div style="font-weight: 700; color: ${iconConfig.color};">${iconConfig.emoji} ${iconConfig.label}</div>
-                    <div style="font-size: 0.85rem; margin-top: 4px;">Mission: ${unit.mission}</div>
-                    <div style="font-size: 0.8rem; color: #64748b;">Status: <span style="color: ${unit.status === 'onscene' ? '#4ade80' : '#fbbf24'}">${unit.status}</span></div>
-                </div>
-            `);
-        
-        deployedUnitMarkers[unit.id] = marker;
-    }
-    
-    function updateDeployedList() {
-        const container = document.getElementById('deployedList');
-        
-        if (deployedUnits.length === 0) {
-            container.innerHTML = `
-                <div style="text-align: center; padding: 12px; color: #64748b; font-size: 0.8rem;">
-                    No units deployed yet
-                </div>
-            `;
-            return;
-        }
-        
-        const icons = {
-            ambulances: '🚑',
-            helicopters: '🚁',
-            fireUnits: '🚒',
-            sarTeams: '👥'
-        };
-        
-        const iconColors = {
-            ambulances: '#ef4444',
-            helicopters: '#8b5cf6',
-            fireUnits: '#f97316',
-            sarTeams: '#3b82f6'
-        };
-        
-        // Update statuses and positions based on time
-        deployedUnits.forEach(unit => {
-            const elapsed = simulationTime - unit.deployedAt;
-            const oldStatus = unit.status;
-            
-            if (elapsed > 300) {
-                unit.status = 'returning';
-            } else if (elapsed > 60) {
-                unit.status = 'onscene';
-            }
-            
-            // Update marker position - animate toward target
-            if (unit.targetLat && unit.targetLng) {
-                const marker = deployedUnitMarkers[unit.id];
-                if (marker) {
-                    if (unit.status === 'enroute') {
-                        // Move toward target
-                        const progress = Math.min(1, elapsed / 60);
-                        const newLat = unit.currentLat + (unit.targetLat - unit.currentLat) * progress;
-                        const newLng = unit.currentLng + (unit.targetLng - unit.currentLng) * progress;
-                        marker.setLatLng([newLat, newLng]);
-                    } else if (unit.status === 'onscene') {
-                        // At target
-                        marker.setLatLng([unit.targetLat, unit.targetLng]);
-                    } else if (unit.status === 'returning') {
-                        // Move back toward staging
-                        const returnProgress = Math.min(1, (elapsed - 300) / 120);
-                        const stagingLat = 37.792;
-                        const stagingLng = -122.435;
-                        const newLat = unit.targetLat + (stagingLat - unit.targetLat) * returnProgress;
-                        const newLng = unit.targetLng + (stagingLng - unit.targetLng) * returnProgress;
-                        marker.setLatLng([newLat, newLng]);
-                    }
-                    
-                    // Update marker appearance if status changed
-                    if (oldStatus !== unit.status) {
-                        updateUnitMarkerAppearance(unit);
-                    }
-                }
-            }
-        });
-        
-        container.innerHTML = deployedUnits.slice(-6).map(unit => `
-            <div class="deployed-item">
-                <div class="deployed-item-info">
-                    <span>${icons[unit.type] || '📍'}</span>
-                    <span>${unit.mission.substring(0, 20)}${unit.mission.length > 20 ? '...' : ''}</span>
-                </div>
-                <span class="deployed-item-status ${unit.status}">${unit.status}</span>
-            </div>
-        `).join('');
-    }
-    
-    function updateUnitMarkerAppearance(unit) {
-        const marker = deployedUnitMarkers[unit.id];
-        if (!marker) return;
-        
-        const icons = {
-            ambulances: { emoji: '🚑', color: '#ef4444' },
-            helicopters: { emoji: '🚁', color: '#8b5cf6' },
-            fireUnits: { emoji: '🚒', color: '#f97316' },
-            sarTeams: { emoji: '👥', color: '#3b82f6' }
-        };
-        
-        const iconConfig = icons[unit.type] || { emoji: '📍', color: '#6b7280' };
-        
-        // Status-based styling
-        let borderColor = 'white';
-        let opacity = '1';
-        let pulse = '';
-        
-        if (unit.status === 'onscene') {
-            borderColor = '#4ade80';
-            pulse = 'animation: unitPulse 1s ease-in-out infinite;';
-        } else if (unit.status === 'returning') {
-            opacity = '0.6';
-            borderColor = '#94a3b8';
-        }
-        
-        const icon = L.divIcon({
-            html: `<div class="deployed-unit-marker ${unit.status}" style="
-                background: ${iconConfig.color};
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                border: 3px solid ${borderColor};
-                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-                opacity: ${opacity};
-                ${pulse}
-            ">${iconConfig.emoji}</div>`,
-            className: 'unit-marker-container',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-        });
-        
-        marker.setIcon(icon);
-        
-        // Update popup
-        const label = {
-            ambulances: 'Ambulance',
-            helicopters: 'Helicopter',
-            fireUnits: 'Fire Unit',
-            sarTeams: 'SAR Team'
-        }[unit.type] || 'Unit';
-        
-        marker.setPopupContent(`
-            <div style="min-width: 120px;">
-                <div style="font-weight: 700; color: ${iconConfig.color};">${iconConfig.emoji} ${label}</div>
-                <div style="font-size: 0.85rem; margin-top: 4px;">Mission: ${unit.mission}</div>
-                <div style="font-size: 0.8rem; color: #64748b;">Status: <span style="color: ${unit.status === 'onscene' ? '#4ade80' : unit.status === 'returning' ? '#94a3b8' : '#fbbf24'}">${unit.status}</span></div>
-            </div>
-        `);
-    }
-    
-    function updateResourceDisplay() {
-        // Update each resource
-        const updateResource = (id, barId, res) => {
-            const pct = (res.available / res.total) * 100;
-            document.getElementById(id).textContent = `${res.available}/${res.total}`;
-            document.getElementById(barId).style.width = `${pct}%`;
-            
-            // Color based on level
-            const bar = document.getElementById(barId);
-            bar.className = 'resource-bar-fill';
-            if (pct <= 25) bar.classList.add('low');
-            else if (pct <= 50) bar.classList.add('medium');
-            
-            // Count styling
-            const countEl = document.getElementById(id);
-            countEl.classList.toggle('low', pct <= 25);
-        };
-        
-        updateResource('resAmbulance', 'resAmbulanceBar', resources.ambulances);
-        updateResource('resHeli', 'resHeliBar', resources.helicopters);
-        updateResource('resFire', 'resFireBar', resources.fireUnits);
-        updateResource('resSAR', 'resSARBar', resources.sarTeams);
-    }
-    
-    function updateOutcomeDisplay() {
-        // Calculate estimated casualties based on damage
-        const collapsed = Object.values(buildingDamage).filter(d => d >= 90).length;
-        const severe = Object.values(buildingDamage).filter(d => d >= 60 && d < 90).length;
-        const baseCasualties = collapsed * 3 + severe * 0.5;
-        outcomeMetrics.estimatedCasualties = Math.round(Math.max(0, baseCasualties - outcomeMetrics.livesSaved));
-        
-        // Update displays
-        document.getElementById('livesSaved').textContent = outcomeMetrics.livesSaved;
-        document.getElementById('estCasualties').textContent = outcomeMetrics.estimatedCasualties;
-        document.getElementById('buildingsCleared').textContent = outcomeMetrics.buildingsCleared;
-        document.getElementById('peopleEvacuated').textContent = outcomeMetrics.peopleEvacuated;
-        
-        // Calculate response score (0-100)
-        const maxScore = 100;
-        const currentScore = Math.min(maxScore, outcomeMetrics.responseScore);
-        const scorePercent = Math.round((currentScore / maxScore) * 100);
-        
-        document.getElementById('responseScoreValue').textContent = `${scorePercent}%`;
-        document.getElementById('responseScoreBar').style.width = `${scorePercent}%`;
-        
-        // Color the lives saved based on positive/negative
-        const livesSavedEl = document.getElementById('livesSaved');
-        livesSavedEl.classList.toggle('positive', outcomeMetrics.livesSaved > 0);
-        livesSavedEl.classList.toggle('negative', outcomeMetrics.livesSaved < 0);
-    }
-    
-    function resetResponseSystem() {
-        // Reset resources
-        resources = {
-            ambulances: { available: 10, total: 10 },
-            helicopters: { available: 4, total: 4 },
-            fireUnits: { available: 8, total: 8 },
-            sarTeams: { available: 6, total: 6 }
-        };
-        
-        // Clear deployed unit markers from map
-        Object.values(deployedUnitMarkers).forEach(marker => {
-            if (map.hasLayer(marker)) {
-                map.removeLayer(marker);
-            }
-        });
-        deployedUnitMarkers = {};
-        
-        // Reset deployed units
-        deployedUnits = [];
-        
-        // Reset outcomes
-        outcomeMetrics = {
-            livesSaved: 0,
-            estimatedCasualties: 0,
-            buildingsCleared: 0,
-            peopleEvacuated: 0,
-            responseScore: 0,
-            decisionsCorrect: 0,
-            decisionsTotal: 0
-        };
-        
-        // Reset decision tracking
-        pendingDecisions = [];
-        decisionHistory = [];
-        currentDecision = null;
-        triggeredDecisions = new Set();
-        if (decisionTimerId) {
-            clearInterval(decisionTimerId);
-            decisionTimerId = null;
-        }
-        
-        // Update displays
-        updateResourceDisplay();
-        updateOutcomeDisplay();
-        updateDeployedList();
-        
-        // Hide decision overlay if visible
-        document.getElementById('decisionOverlay').classList.remove('visible');
     }
     
     function showTsunamiBanner(eta) {
