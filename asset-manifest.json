@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.4bda0311.css",
-    "main.js": "/static/js/main.a5ad23ae.js",
-    "index.html": "/index.html",
-    "main.4bda0311.css.map": "/static/css/main.4bda0311.css.map",
-    "main.a5ad23ae.js.map": "/static/js/main.a5ad23ae.js.map"
+    "main.css": "/iambadbadboy/dsci554_group1.github.io/static/css/main.4bda0311.css",
+    "main.js": "/iambadbadboy/dsci554_group1.github.io/static/js/main.a5ad23ae.js",
+    "index.html": "/iambadbadboy/dsci554_group1.github.io/index.html",
+    "main.4bda0311.css.map": "/iambadbadboy/dsci554_group1.github.io/static/css/main.4bda0311.css.map",
+    "main.a5ad23ae.js.map": "/iambadbadboy/dsci554_group1.github.io/static/js/main.a5ad23ae.js.map"
   },
   "entrypoints": [
     "static/css/main.4bda0311.css",
